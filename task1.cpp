@@ -5,6 +5,7 @@
 #include <cmath>
 #include <time.h>
 #include <random>
+#include <bits/stdc++.h>
 
 unsigned const MAX_VERTICES = 100;
 
@@ -38,6 +39,7 @@ struct c4
 
 
 int n, m;
+int iternum=0;
 vector<int> graph;
 vector<c4> circles;
 
@@ -74,11 +76,16 @@ bool isNotCircle(const c4& circle){
     return !isCircle(circle);
 }
 
-void reeval_circles(){
-    circles.erase(std::remove_if(circles.begin(), circles.end(), isNotCircle), circles.end());
+void reeval_circles(vector<c4> circles, const vector<int> &graph){
+    circles.erase(std::remove_if(circles.begin(), circles.end(), [graph](const c4& circle){
+        if(graph[circle.idx1]!=1 || graph[circle.idx2]!=1 || graph[circle.idx3]!=1 || graph[circle.idx4]!=1){
+            return true;
+        }
+        return false;
+    }), circles.end());
 }
 
-vector<c4> eval(int idx){
+vector<c4> eval(int idx, const vector<int> &graph){
     vector<c4> res;
     int x = idx/m;
     int y = idx%m;
@@ -120,7 +127,7 @@ vector<c4> eval(int idx){
     return res;
 }
 
-void print_graph(){
+void print_graph(const vector<int> &graph){
     for(int i = 0; i < n; i++){
         for (int j = 0; j < m; j++)
         {
@@ -134,7 +141,7 @@ void print_circle(c4 circle){
     cout<<circle.idx1/m<<", "<<circle.idx1%m<<", "<<circle.idx3/m<<", "<<circle.idx3%m<<",";
 }
 
-void check__for_free_edges(){
+void check__for_free_edges(vector<int> &graph){
     vector<int> temp;
     temp.assign(n*m, {});
     for(int i=0;i<n*m;i++)
@@ -144,7 +151,7 @@ void check__for_free_edges(){
 
     for(auto i : temp){
         if(graph[i]!=1){
-            if(eval(i).size()==0){
+            if(eval(i, graph).size()==0){
                 graph[i]=1;
                 cout<<"siker hozzáadva egy free él["<<i/m<<", "<<i%m<<"]"<<endl;
             }
@@ -160,23 +167,59 @@ void check__for_free_edges(){
     }*/
 }
 
+void run_iterations(int iteration, int _n, int _m, double p, ofstream out)
+{
+    vector<int> gr;
+    gr.assign(n*m, 0);
+    vector<c4> circs;
+    for(int i=0;i<n*m;i++){
+        if(p>((double)rand()/(double)RAND_MAX)){
+            vector<c4> temp=eval(i, gr);
+            circs.insert(circs.end(), temp.begin(), temp.end());
+            gr[i]=1;
+        }
+    }
+    while(circs.size()!=0){
+        iternum++;
+        for(int i=0;i<4;i++){
+            int edge=circs[0].get(i);
+            if(p>((double)rand()/(double)RAND_MAX)){
+                gr[edge]=0;
+                eval(edge, gr);
+                gr[edge]=1;
+            }else{
+                gr[edge]=0;
+            }
+        }
+        reeval_circles(circs, gr);
+        for(auto element : circs){
+            print_circle(element);
+            cout<<endl;
+        }
+        print_graph(gr);
+        cout<<"Circles reevaluated"<<endl;
+        cout<<"size: "<<circs.size()<<endl;
+    }
+    check__for_free_edges(graph);
+    print_graph(gr);
+}
+
 int main(){
     srand((unsigned)time(NULL));
     cin>>n>>m;
     long long d=nCr(m,2)*nCr(n,2) - (nCr(m,2)*nCr(n-2,2)+2*nCr(m-2,1)*nCr(n-2,2)+nCr(n-2,2));
     double p=sqrt(sqrt((double)1/(4*d)));
     graph.assign(n*m, 0);
-    double X=((double)rand()/(double)RAND_MAX);
-    for(int i=0;i<n*m;i++){
+    /*for(int i=0;i<n*m;i++){
         if(p>((double)rand()/(double)RAND_MAX)){
             vector<c4> temp=eval(i);
             circles.insert(circles.end(), temp.begin(), temp.end());
             graph[i]=1;
         }
     }
-
-    int kuki=1;
-    while(circles.size()!=0&& kuki++){
+    int iternum=0;
+    while(circles.size()!=0){
+        iternum++;
         for(int i=0;i<4;i++){
             int edge=circles[0].get(i);
             if(p>((double)rand()/(double)RAND_MAX)){
@@ -197,8 +240,8 @@ int main(){
         cout<<"size: "<<circles.size()<<endl;
     }
     check__for_free_edges();
-
-    print_graph();
+    */
+    //print_graph();
     cout<<endl;
     /*for(auto element : circles){
         element.print();
@@ -214,6 +257,6 @@ int main(){
     cout<<endl<<endl<< "edges: "<< edges<< endl;
     double hanyszor = (nCr(n,2)*nCr(m,2))/(d-1);
     cout<<"n/(d-1) = "<<hanyszor<<endl;
-    cout<<"valojaban = "<<kuki-1<<endl;
+    cout<<"valojaban = "<<iternum<<endl;
     return 0;
 }
