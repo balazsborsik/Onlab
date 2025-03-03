@@ -7,7 +7,16 @@
 #include <random>
 #include <bits/stdc++.h>
 
-unsigned const MAX_VERTICES = 100;
+#define ENABLE_LOG
+
+#ifdef ENABLE_LOG
+#  define LOG(x) x
+#else
+#  define LOG(x) (void) 0 
+#endif
+
+
+unsigned const MAX_VERTICES = 101;
 
 using namespace std;
 
@@ -38,7 +47,7 @@ struct c4
 };
 
 
-int n, m;
+//int n, m;
 //vector<int> graph;
 //vector<c4> circles;
 
@@ -84,7 +93,7 @@ void reeval_circles(vector<c4> &circles, const vector<int> &graph){
     }), circles.end());
 }
 
-vector<c4> eval(int idx, const vector<int> &graph){
+vector<c4> eval(int idx, const vector<int> &graph, int n, int m){
     vector<c4> res;
     int x = idx/m;
     int y = idx%m;
@@ -126,7 +135,7 @@ vector<c4> eval(int idx, const vector<int> &graph){
     return res;
 }
 
-void print_graph(const vector<int> &graph, ostream& out=cout){
+void print_graph(const vector<int> &graph,int n, int m, ostream& out=cout){
     for(int i = 0; i < n; i++){
         for (int j = 0; j < m; j++)
         {
@@ -136,11 +145,11 @@ void print_graph(const vector<int> &graph, ostream& out=cout){
     }
 }
 
-void print_circle(c4 circle){
+void print_circle(c4 circle, int n, int m){
     cout<<circle.idx1/m<<", "<<circle.idx1%m<<", "<<circle.idx3/m<<", "<<circle.idx3%m<<",";
 }
 
-void check__for_free_edges(vector<int> &graph){
+void check__for_free_edges(vector<int> &graph, int n, int m){
     vector<int> temp;
     temp.assign(n*m, {});
     for(int i=0;i<n*m;i++)
@@ -150,7 +159,7 @@ void check__for_free_edges(vector<int> &graph){
 
     for(auto i : temp){
         if(graph[i]!=1){
-            if(eval(i, graph).size()==0){
+            if(eval(i, graph, n, m).size()==0){
                 graph[i]=1;
                 //cout<<"siker hozzáadva egy free él["<<i/m<<", "<<i%m<<"]"<<endl;
             }
@@ -174,19 +183,19 @@ int number_of_edges(const vector<int> &graph){
     return edges;
 }
 
-vector<int> run_iterations(int iteration, int _n, int _m, double p, ostream& out=cout)
+vector<int> run_iterations(int iteration, int n, int m, double p, ostream& out=cout)
 {
     vector<int> graph;
     graph.assign(n*m, 0);
     for(int iter=0; iter<iteration;iter++){
-        if(iter%(iteration/100)==0)
-            cout<<iter/(iteration/100)+1<<"%" <<"completed"<<endl;
+        //if(iter%(iteration/100)==0)
+            //cout<<iter/(iteration/100)+1<<"%" <<"completed"<<endl;
         vector<int> gr;
         gr.assign(n*m, 0);
         vector<c4> circs;
         for(int i=0;i<n*m;i++){
             if(p>((double)rand()/(double)RAND_MAX)){
-                vector<c4> temp=eval(i, gr);
+                vector<c4> temp=eval(i, gr, n ,m);
                 circs.insert(circs.end(), temp.begin(), temp.end());
                 gr[i]=1;
             }
@@ -198,7 +207,7 @@ vector<int> run_iterations(int iteration, int _n, int _m, double p, ostream& out
                 int edge=circs[0].get(i);
                 if(p>((double)rand()/(double)RAND_MAX)){
                     gr[edge]=0;
-                    vector<c4> temp=eval(edge, gr);
+                    vector<c4> temp=eval(edge, gr, n, m);
                     circs.insert(circs.end(), temp.begin(), temp.end());
                     gr[edge]=1;
                 }else{
@@ -212,7 +221,7 @@ vector<int> run_iterations(int iteration, int _n, int _m, double p, ostream& out
         //cout<<"n/(d-1) = "<<hanyszor<<endl;
         //cout<<"valojaban = "<<iternum<<endl;
 
-        check__for_free_edges(gr);
+        check__for_free_edges(gr, n, m);
         if(number_of_edges(gr)>number_of_edges(graph)){
             graph=gr;
         }
@@ -222,7 +231,10 @@ vector<int> run_iterations(int iteration, int _n, int _m, double p, ostream& out
 
 int main(){
     srand((unsigned)time(NULL));
-    cin>>n>>m;
+    int n=1,m=1;
+    //cin>>n>>m;
+    vector<vector<int>> table(20, vector<int>(20, 0));
+
     long long d=nCr(m,2)*nCr(n,2) - (nCr(m,2)*nCr(n-2,2)+2*nCr(m-2,1)*nCr(n-2,2)+nCr(n-2,2));
     double p=sqrt(sqrt((double)1/(4*d)))+0.12;
     vector<int> graph=run_iterations(10000, n, m, p);
@@ -263,14 +275,15 @@ int main(){
         cout<<endl;
     }*/
 
-    print_graph(graph);
     int edges=0;
     for(auto element : graph){
         edges+=element;
     }
-
-    cout<<endl<<endl<< "edges: "<< edges<< endl;
-    
-    
+    //cout<<endl<<endl<< "edges: "<< edges<< endl;
+    stringstream str;
+    str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<edges<<".txt";
+    ofstream outfile (str.str());
+    print_graph(graph, n, m, outfile);
+    outfile.close();
     return 0;
 }
