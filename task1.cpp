@@ -7,6 +7,8 @@
 #include <random>
 #include <bits/stdc++.h>
 
+///!TODO megcsinálni ugyanúgy a random sorrendű sorsolást ne csak a free élekere
+
 unsigned const MAX_VERTICES = 101;
 
 using namespace std;
