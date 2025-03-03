@@ -39,9 +39,8 @@ struct c4
 
 
 int n, m;
-int iternum=0;
-vector<int> graph;
-vector<c4> circles;
+//vector<int> graph;
+//vector<c4> circles;
 
 long nCr(int n,int r)
 {
@@ -65,7 +64,7 @@ long nCr(int n,int r)
     return ans;
 }
 
-bool isCircle(const c4& circle){
+/*bool isCircle(const c4& circle){
     if(graph[circle.idx1]!=1 || graph[circle.idx2]!=1 || graph[circle.idx3]!=1 || graph[circle.idx4]!=1){
         return false;
     }
@@ -74,9 +73,9 @@ bool isCircle(const c4& circle){
 
 bool isNotCircle(const c4& circle){
     return !isCircle(circle);
-}
+}*/
 
-void reeval_circles(vector<c4> circles, const vector<int> &graph){
+void reeval_circles(vector<c4> &circles, const vector<int> &graph){
     circles.erase(std::remove_if(circles.begin(), circles.end(), [graph](const c4& circle){
         if(graph[circle.idx1]!=1 || graph[circle.idx2]!=1 || graph[circle.idx3]!=1 || graph[circle.idx4]!=1){
             return true;
@@ -127,13 +126,13 @@ vector<c4> eval(int idx, const vector<int> &graph){
     return res;
 }
 
-void print_graph(const vector<int> &graph){
+void print_graph(const vector<int> &graph, ostream& out=cout){
     for(int i = 0; i < n; i++){
         for (int j = 0; j < m; j++)
         {
-           cout<<graph[i*m+j]<<' ';
+           out<<graph[i*m+j]<<' ';
         }
-        cout<<endl;
+        out<<endl;
     }
 }
 
@@ -153,7 +152,7 @@ void check__for_free_edges(vector<int> &graph){
         if(graph[i]!=1){
             if(eval(i, graph).size()==0){
                 graph[i]=1;
-                cout<<"siker hozzáadva egy free él["<<i/m<<", "<<i%m<<"]"<<endl;
+                //cout<<"siker hozzáadva egy free él["<<i/m<<", "<<i%m<<"]"<<endl;
             }
         }
     }
@@ -167,49 +166,66 @@ void check__for_free_edges(vector<int> &graph){
     }*/
 }
 
-void run_iterations(int iteration, int _n, int _m, double p, ofstream out)
-{
-    vector<int> gr;
-    gr.assign(n*m, 0);
-    vector<c4> circs;
-    for(int i=0;i<n*m;i++){
-        if(p>((double)rand()/(double)RAND_MAX)){
-            vector<c4> temp=eval(i, gr);
-            circs.insert(circs.end(), temp.begin(), temp.end());
-            gr[i]=1;
-        }
+int number_of_edges(const vector<int> &graph){
+    int edges=0;
+    for(auto element : graph){
+        edges+=element;
     }
-    while(circs.size()!=0){
-        iternum++;
-        for(int i=0;i<4;i++){
-            int edge=circs[0].get(i);
+    return edges;
+}
+
+vector<int> run_iterations(int iteration, int _n, int _m, double p, ostream& out=cout)
+{
+    vector<int> graph;
+    graph.assign(n*m, 0);
+    for(int iter=0; iter<iteration;iter++){
+        if(iter%(iteration/100)==0)
+            cout<<iter/(iteration/100)+1<<"%" <<"completed"<<endl;
+        vector<int> gr;
+        gr.assign(n*m, 0);
+        vector<c4> circs;
+        for(int i=0;i<n*m;i++){
             if(p>((double)rand()/(double)RAND_MAX)){
-                gr[edge]=0;
-                eval(edge, gr);
-                gr[edge]=1;
-            }else{
-                gr[edge]=0;
+                vector<c4> temp=eval(i, gr);
+                circs.insert(circs.end(), temp.begin(), temp.end());
+                gr[i]=1;
             }
         }
-        reeval_circles(circs, gr);
-        for(auto element : circs){
-            print_circle(element);
-            cout<<endl;
+        int iternum=0;
+        while(circs.size()!=0){
+            iternum++;
+            for(int i=0;i<4;i++){
+                int edge=circs[0].get(i);
+                if(p>((double)rand()/(double)RAND_MAX)){
+                    gr[edge]=0;
+                    vector<c4> temp=eval(edge, gr);
+                    circs.insert(circs.end(), temp.begin(), temp.end());
+                    gr[edge]=1;
+                }else{
+                    gr[edge]=0;
+                }
+            }
+            reeval_circles(circs, gr);
         }
-        print_graph(gr);
-        cout<<"Circles reevaluated"<<endl;
-        cout<<"size: "<<circs.size()<<endl;
+
+        double hanyszor = (nCr(n,2)*nCr(m,2))/(nCr(m,2)*nCr(n,2) - (nCr(m,2)*nCr(n-2,2)+2*nCr(m-2,1)*nCr(n-2,2)+nCr(n-2,2))-1);
+        //cout<<"n/(d-1) = "<<hanyszor<<endl;
+        //cout<<"valojaban = "<<iternum<<endl;
+
+        check__for_free_edges(gr);
+        if(number_of_edges(gr)>number_of_edges(graph)){
+            graph=gr;
+        }
     }
-    check__for_free_edges(graph);
-    print_graph(gr);
+    return graph;
 }
 
 int main(){
     srand((unsigned)time(NULL));
     cin>>n>>m;
     long long d=nCr(m,2)*nCr(n,2) - (nCr(m,2)*nCr(n-2,2)+2*nCr(m-2,1)*nCr(n-2,2)+nCr(n-2,2));
-    double p=sqrt(sqrt((double)1/(4*d)));
-    graph.assign(n*m, 0);
+    double p=sqrt(sqrt((double)1/(4*d)))+0.12;
+    vector<int> graph=run_iterations(10000, n, m, p);
     /*for(int i=0;i<n*m;i++){
         if(p>((double)rand()/(double)RAND_MAX)){
             vector<c4> temp=eval(i);
@@ -242,21 +258,19 @@ int main(){
     check__for_free_edges();
     */
     //print_graph();
-    cout<<endl;
     /*for(auto element : circles){
         element.print();
         cout<<endl;
     }*/
-   cout<<"circles: "<<circles.size()<<endl;
 
+    print_graph(graph);
     int edges=0;
     for(auto element : graph){
         edges+=element;
     }
 
     cout<<endl<<endl<< "edges: "<< edges<< endl;
-    double hanyszor = (nCr(n,2)*nCr(m,2))/(d-1);
-    cout<<"n/(d-1) = "<<hanyszor<<endl;
-    cout<<"valojaban = "<<iternum<<endl;
+    
+    
     return 0;
 }
