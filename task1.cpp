@@ -8,7 +8,29 @@
 #include <bits/stdc++.h>
 
 //ötlet randommal lefuttatni, elraktározni a seedet, amivel jó lett és azt a seedet/azokat a seedeket használni
- 
+
+int arr[20][20] = {
+    {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
+    {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
+    {3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23},
+    {4, 5, 7, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26},
+    {5, 6, 8, 10, 12, 14, 15, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30},
+    {6, 7, 9, 12, 14, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31, 32, 33, 34, 35},
+    {7, 8, 10, 13, 15, 18, 21, 22, 24, 25, 27, 28, 30, 31, 33, 34, 36, 37, 39, 40},
+    {8, 9, 11, 14, 17, 19, 22, 24, 26, 28, 30, 32, 33, 35, 36, 38, 39, 41, 42, 44},
+    {9, 10, 12, 15, 18, 21, 24, 26, 29, 31, 33, 36, 37, 39, 40, 42, 43, 45, 46, 48},
+    {10, 11, 13, 16, 20, 22, 25, 28, 31, 34, 36, 39, 40, 42, 44, 45, 47, 49, 51, 52},
+    {11, 12, 14, 17, 21, 24, 27, 30, 33, 36, 39, 42, 44, 45, 47, 49, 51, 53, 54, 56},
+    {12, 13, 15, 18, 22, 25, 28, 32, 36, 39, 42, 45, 48, 49, 51, 52, 55, 56, 59, 60},
+    {13, 14, 16, 19, 23, 27, 30, 33, 37, 40, 44, 48, 49, 53, 54, 56, 58, 60, 62, 64},
+    {14, 15, 17, 20, 24, 28, 31, 35, 39, 42, 45, 49, 53, 55, 57, 60, 62, 63, 66, 67},
+    {15, 16, 18, 21, 25, 30, 33, 36, 40, 44, 47, 51, 54, 57, 60, 63, 65, 67, 69, 71},
+    {16, 17, 19, 22, 26, 31, 34, 38, 42, 45, 49, 52, 56, 60, 63, 65, 68, 70, 72, 74},
+    {17, 18, 20, 23, 27, 32, 36, 39, 43, 47, 51, 55, 58, 62, 65, 68, 70, 73, 76, 78},
+    {18, 19, 21, 24, 28, 33, 37, 41, 45, 49, 53, 56, 60, 63, 67, 70, 73, 76, 80, 82},
+    {19, 20, 22, 25, 29, 34, 39, 42, 46, 51, 54, 59, 62, 66, 69, 72, 76, 80, 83, 87},
+    {20, 21, 23, 26, 30, 35, 40, 44, 48, 52, 56, 60, 64, 67, 71, 74, 78, 82, 87, 88}
+};
 unsigned const MAX_VERTICES = 101;
 
 using namespace std;
@@ -218,34 +240,18 @@ int main(){
     cin>>n>>m;
     long long d=nCr(m,2)*nCr(n,2) - (nCr(m,2)*nCr(n-2,2)+2*nCr(m-2,1)*nCr(n-2,2)+nCr(n-2,2));
     double p=sqrt(sqrt((double)1/(4*d)))+0.105;
-    
+    //p=0.85*((double)((double)arr[m-1][n-1]/(m*n)));
     auto start = std::chrono::steady_clock::now();
 
     vector<int> graph = run_iterations(100000, n, m, p);
 
     auto end = std::chrono::steady_clock::now();
-    /*
-        reeval_circles();
-        for(auto element : circles){
-            print_circle(element);
-            cout<<endl;
-        }
-        print_graph();
-        cout<<"Circles reevaluated"<<endl;
-        cout<<"size: "<<circles.size()<<endl;
-    }
-    check__for_free_edges();
-    */
     print_graph(graph, n ,m);
     int edges=0;
     for(auto element : graph){
         edges+=element;
     }
-    cout<<endl<<endl<< "edges: "<< edges<< endl;
-
-
-    
-
+    cout<<endl<<endl<< "edges: "<< edges<< endl;  
     double average=0;
     double variance=0;
     int array[] = {0,0,0,0,0,0,0,0};
@@ -261,18 +267,20 @@ int main(){
     variance /= vec.size();
     double D = sqrt(variance);
     auto diff = end - start;
-    std::cout <<"time: "<< std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
-    cout << vec.size() << " ugye 100 000"<< endl;
-    cout << endl << "variance: " << variance << " szórás: "<< D << endl;
-    cout << "average: " << average << endl; 
-    for(int i=0;i<8;i++){
-        cout << 80+i << ": " << array[i] << " db" <<endl;
-    }
+    /*9ofstream myfile;
+    myfile.open("logs2.txt", std::ios_base::app);
+    myfile<< n<<", "<<m<<endl;
+    myfile << "average: " << average << endl;
+    myfile << "p: "<<p<<endl;
+    myfile <<"time: "<< std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
+    myfile << "variance: " << variance << " szórás: "<< D << endl;
+    myfile.close();*/
     stringstream str;
     str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<edges<<".txt";
     ofstream outfile (str.str());
     print_graph(graph, n, m, outfile);
     outfile.close();
+    vec.clear();
     return 0;
 }
 

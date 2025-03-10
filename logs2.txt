@@ -1,0 +1,1050 @@
+20, 20
+average: 80.8358
+p: 0.187
+time: 60963.5 ms
+variance: 2.67082 szórás: 1.63426
+20, 19
+average: 77.9901
+p: 0.194605
+time: 57040.4 ms
+variance: 2.60578 szórás: 1.61424
+19, 19
+average: 75.2454
+p: 0.195429
+time: 47356.3 ms
+variance: 2.52209 szórás: 1.58811
+20, 18
+average: 75.0775
+p: 0.193611
+time: 51613.9 ms
+variance: 2.50991 szórás: 1.58427
+19, 18
+average: 72.4337
+p: 0.19883
+time: 51199.7 ms
+variance: 2.43706 szórás: 1.56111
+18, 18
+average: 69.757
+p: 0.199383
+time: 45757.4 ms
+variance: 2.36906 szórás: 1.53917
+20, 17
+average: 72.0847
+p: 0.195
+time: 45485.7 ms
+variance: 2.36842 szórás: 1.53897
+19, 17
+average: 69.5799
+p: 0.2
+time: 41195.5 ms
+variance: 2.34121 szórás: 1.5301
+18, 17
+average: 67.0133
+p: 0.202778
+time: 43683.7 ms
+variance: 2.28569 szórás: 1.51185
+17, 17
+average: 64.38
+p: 0.205882
+time: 42536.9 ms
+variance: 2.22296 szórás: 1.49096
+20, 16
+average: 69.0411
+p: 0.196563
+time: 43893.4 ms
+variance: 2.25379 szórás: 1.50126
+19, 16
+average: 66.6399
+p: 0.201316
+time: 44891.1 ms
+variance: 2.20631 szórás: 1.48536
+18, 16
+average: 64.1917
+p: 0.206597
+time: 36080.1 ms
+variance: 2.17785 szórás: 1.47575
+17, 16
+average: 61.6946
+p: 0.2125
+time: 31970.8 ms
+variance: 2.15009 szórás: 1.46632
+16, 16
+average: 59.1272
+p: 0.21582
+time: 29746.6 ms
+variance: 2.08981 szórás: 1.44562
+20, 15
+average: 65.9125
+p: 0.201167
+time: 43168.4 ms
+variance: 2.09327 szórás: 1.44681
+19, 15
+average: 63.6321
+p: 0.205789
+time: 36444.9 ms
+variance: 2.10276 szórás: 1.45009
+18, 15
+average: 61.3186
+p: 0.210926
+time: 40075.7 ms
+variance: 2.0891 szórás: 1.44537
+17, 15
+average: 58.9527
+p: 0.216667
+time: 32049.8 ms
+variance: 2.04082 szórás: 1.42857
+16, 15
+average: 56.508
+p: 0.223125
+time: 31545.8 ms
+variance: 2.02554 szórás: 1.42321
+15, 15
+average: 54.0146
+p: 0.226667
+time: 28148.4 ms
+variance: 1.94049 szórás: 1.39301
+20, 14
+average: 62.7031
+p: 0.203393
+time: 40586.7 ms
+variance: 1.93774 szórás: 1.39203
+19, 14
+average: 60.5552
+p: 0.210902
+time: 32575 ms
+variance: 1.93413 szórás: 1.39073
+18, 14
+average: 58.3505
+p: 0.2125
+time: 87792.9 ms
+variance: 1.9323 szórás: 1.39007
+17, 14
+average: 56.1106
+p: 0.221429
+time: 29703.7 ms
+variance: 1.92353 szórás: 1.38691
+16, 14
+average: 53.8049
+p: 0.227679
+time: 30713.8 ms
+variance: 1.91538 szórás: 1.38397
+15, 14
+average: 51.4432
+p: 0.230714
+time: 25733 ms
+variance: 1.86978 szórás: 1.3674
+14, 14
+average: 49.0153
+p: 0.23852
+time: 34410.5 ms
+variance: 1.81032 szórás: 1.34548
+20, 13
+average: 59.4174
+p: 0.209231
+time: 158267 ms
+variance: 1.75906 szórás: 1.3263
+19, 13
+average: 57.3766
+p: 0.21336
+time: 51181.2 ms
+variance: 1.77152 szórás: 1.33098
+18, 13
+average: 55.3135
+p: 0.217949
+time: 28799.2 ms
+variance: 1.75366 szórás: 1.32426
+17, 13
+average: 53.1997
+p: 0.223077
+time: 29962.9 ms
+variance: 1.75595 szórás: 1.32512
+16, 13
+average: 51.0309
+p: 0.228846
+time: 26006.5 ms
+variance: 1.75686 szórás: 1.32546
+15, 13
+average: 48.8141
+p: 0.235385
+time: 33756.9 ms
+variance: 1.75821 szórás: 1.32598
+14, 13
+average: 46.516
+p: 0.247527
+time: 21301.5 ms
+variance: 1.70994 szórás: 1.30765
+13, 13
+average: 44.1618
+p: 0.24645
+time: 20937.5 ms
+variance: 1.66457 szórás: 1.29018
+20, 12
+average: 56.0424
+p: 0.2125
+time: 45767.5 ms
+variance: 1.57925 szórás: 1.25668
+19, 12
+average: 54.1363
+p: 0.219956
+time: 29680.4 ms
+variance: 1.58302 szórás: 1.25818
+18, 12
+average: 52.1847
+p: 0.22037
+time: 30490.1 ms
+variance: 1.59117 szórás: 1.26141
+17, 12
+average: 50.2055
+p: 0.229167
+time: 33811.9 ms
+variance: 1.61746 szórás: 1.2718
+16, 12
+average: 48.1671
+p: 0.230208
+time: 22099.5 ms
+variance: 1.60307 szórás: 1.26612
+15, 12
+average: 46.0825
+p: 0.240833
+time: 24155.4 ms
+variance: 1.61206 szórás: 1.26967
+14, 12
+average: 43.9401
+p: 0.247917
+time: 19366.3 ms
+variance: 1.58707 szórás: 1.25979
+13, 12
+average: 41.7421
+p: 0.261538
+time: 19523 ms
+variance: 1.5632 szórás: 1.25028
+12, 12
+average: 39.4548
+p: 0.265625
+time: 17877.7 ms
+variance: 1.53072 szórás: 1.23722
+20, 11
+average: 52.5821
+p: 0.216364
+time: 29985.5 ms
+variance: 1.41925 szórás: 1.19132
+19, 11
+average: 50.7923
+p: 0.219617
+time: 25026.3 ms
+variance: 1.42009 szórás: 1.19167
+18, 11
+average: 48.9756
+p: 0.227525
+time: 33257.4 ms
+variance: 1.41274 szórás: 1.18859
+17, 11
+average: 47.1231
+p: 0.231818
+time: 21079.7 ms
+variance: 1.42811 szórás: 1.19504
+16, 11
+average: 45.2192
+p: 0.236648
+time: 22179.2 ms
+variance: 1.42298 szórás: 1.19289
+15, 11
+average: 43.2747
+p: 0.242121
+time: 18697.8 ms
+variance: 1.43881 szórás: 1.19951
+14, 11
+average: 41.2735
+p: 0.248377
+time: 18359.1 ms
+variance: 1.44562 szórás: 1.20234
+13, 11
+average: 39.2223
+p: 0.261538
+time: 17376.8 ms
+variance: 1.43446 szórás: 1.19769
+12, 11
+average: 37.1002
+p: 0.270455
+time: 16031.8 ms
+variance: 1.42142 szórás: 1.19223
+11, 11
+average: 34.8992
+p: 0.273967
+time: 14323.7 ms
+variance: 1.36643 szórás: 1.16894
+20, 10
+average: 49.0169
+p: 0.221
+time: 31651.4 ms
+variance: 1.29669 szórás: 1.13872
+19, 10
+average: 47.367
+p: 0.228158
+time: 21099.4 ms
+variance: 1.27533 szórás: 1.1293
+18, 10
+average: 45.6768
+p: 0.231389
+time: 23021.4 ms
+variance: 1.26151 szórás: 1.12317
+17, 10
+average: 43.9473
+p: 0.235
+time: 20369.7 ms
+variance: 1.26381 szórás: 1.12419
+16, 10
+average: 42.1819
+p: 0.239062
+time: 18872 ms
+variance: 1.25573 szórás: 1.12059
+15, 10
+average: 40.3771
+p: 0.249333
+time: 16996 ms
+variance: 1.24541 szórás: 1.11598
+14, 10
+average: 38.5236
+p: 0.255
+time: 15841 ms
+variance: 1.26882 szórás: 1.12642
+13, 10
+average: 36.6146
+p: 0.261538
+time: 14286.5 ms
+variance: 1.27489 szórás: 1.12911
+12, 10
+average: 34.6542
+p: 0.27625
+time: 13473.4 ms
+variance: 1.26813 szórás: 1.12611
+11, 10
+average: 32.6192
+p: 0.278182
+time: 12202.6 ms
+variance: 1.27167 szórás: 1.12768
+10, 10
+average: 30.502
+p: 0.289
+time: 11142.3 ms
+variance: 1.21192 szórás: 1.10087
+20, 9
+average: 45.3124
+p: 0.226667
+time: 19988.7 ms
+variance: 1.21047 szórás: 1.10022
+19, 9
+average: 43.7965
+p: 0.228655
+time: 19395.5 ms
+variance: 1.18823 szórás: 1.09006
+18, 9
+average: 42.2457
+p: 0.236111
+time: 17926.9 ms
+variance: 1.15126 szórás: 1.07297
+17, 9
+average: 40.6611
+p: 0.238889
+time: 17337.3 ms
+variance: 1.13985 szórás: 1.06764
+16, 9
+average: 39.0393
+p: 0.247917
+time: 15565.5 ms
+variance: 1.11536 szórás: 1.0561
+15, 9
+average: 37.3766
+p: 0.251852
+time: 14910.2 ms
+variance: 1.10539 szórás: 1.05137
+14, 9
+average: 35.674
+p: 0.263095
+time: 13649.2 ms
+variance: 1.09129 szórás: 1.04465
+13, 9
+average: 33.9181
+p: 0.268803
+time: 12854.2 ms
+variance: 1.09891 szórás: 1.04829
+12, 9
+average: 32.11
+p: 0.283333
+time: 12041.7 ms
+variance: 1.1127 szórás: 1.05485
+11, 9
+average: 30.2375
+p: 0.283333
+time: 10597.5 ms
+variance: 1.11903 szórás: 1.05784
+10, 9
+average: 28.2992
+p: 0.292778
+time: 10008.6 ms
+variance: 1.11464 szórás: 1.05576
+9, 9
+average: 26.2791
+p: 0.304321
+time: 9744.35 ms
+variance: 1.06801 szórás: 1.03345
+20, 8
+average: 41.4221
+p: 0.23375
+time: 18667.1 ms
+variance: 1.1583 szórás: 1.07624
+19, 8
+average: 40.0593
+p: 0.234868
+time: 16354.5 ms
+variance: 1.12863 szórás: 1.06237
+18, 8
+average: 38.6643
+p: 0.242014
+time: 14989.9 ms
+variance: 1.08024 szórás: 1.03935
+17, 8
+average: 37.2362
+p: 0.24375
+time: 13939.9 ms
+variance: 1.04851 szórás: 1.02397
+16, 8
+average: 35.7653
+p: 0.252344
+time: 13756.8 ms
+variance: 1.01757 szórás: 1.00875
+15, 8
+average: 34.2576
+p: 0.255
+time: 12278 ms
+variance: 0.990512 szórás: 0.995245
+14, 8
+average: 32.7055
+p: 0.265625
+time: 12039.4 ms
+variance: 0.957522 szórás: 0.97853
+13, 8
+average: 31.104
+p: 0.269712
+time: 11216.9 ms
+variance: 0.951024 szórás: 0.975205
+12, 8
+average: 29.4694
+p: 0.283333
+time: 10285.1 ms
+variance: 0.938681 szórás: 0.968856
+11, 8
+average: 27.758
+p: 0.289773
+time: 10091 ms
+variance: 0.946117 szórás: 0.972685
+10, 8
+average: 26.0065
+p: 0.2975
+time: 9686.81 ms
+variance: 0.952388 szórás: 0.975904
+9, 8
+average: 24.1592
+p: 0.306944
+time: 8463.13 ms
+variance: 0.940575 szórás: 0.969832
+8, 8
+average: 22.2383
+p: 0.31875
+time: 7732.61 ms
+variance: 0.893907 szórás: 0.945467
+20, 7
+average: 37.336
+p: 0.242857
+time: 15418.7 ms
+variance: 1.03848 szórás: 1.01906
+19, 7
+average: 36.1218
+p: 0.249248
+time: 14179.4 ms
+variance: 1.01254 szórás: 1.00625
+18, 7
+average: 34.877
+p: 0.249603
+time: 13572.9 ms
+variance: 0.986751 szórás: 0.993353
+17, 7
+average: 33.6088
+p: 0.257143
+time: 12714.4 ms
+variance: 0.960905 szórás: 0.980257
+16, 7
+average: 32.3053
+p: 0.258036
+time: 11910 ms
+variance: 0.919992 szórás: 0.959162
+15, 7
+average: 30.9591
+p: 0.267143
+time: 11306.8 ms
+variance: 0.900684 szórás: 0.949044
+14, 7
+average: 29.5823
+p: 0.268878
+time: 10897.1 ms
+variance: 0.868745 szórás: 0.932065
+13, 7
+average: 28.1607
+p: 0.28022
+time: 9991.49 ms
+variance: 0.845268 szórás: 0.919385
+12, 7
+average: 26.6924
+p: 0.283333
+time: 9188.57 ms
+variance: 0.814826 szórás: 0.902677
+11, 7
+average: 25.1682
+p: 0.298052
+time: 8475.22 ms
+variance: 0.792335 szórás: 0.890132
+10, 7
+average: 23.5891
+p: 0.303571
+time: 7810.25 ms
+variance: 0.785301 szórás: 0.886172
+9, 7
+average: 21.9426
+p: 0.32381
+time: 7598.65 ms
+variance: 0.788003 szórás: 0.887695
+8, 7
+average: 20.2187
+p: 0.333929
+time: 6615.74 ms
+variance: 0.772153 szórás: 0.878722
+7, 7
+average: 18.4011
+p: 0.364286
+time: 5850.33 ms
+variance: 0.710867 szórás: 0.843129
+20, 6
+average: 33.1562
+p: 0.247917
+time: 11840.6 ms
+variance: 0.806974 szórás: 0.898317
+19, 6
+average: 32.0596
+p: 0.253509
+time: 11462.4 ms
+variance: 0.805825 szórás: 0.897678
+18, 6
+average: 30.9487
+p: 0.259722
+time: 11307.5 ms
+variance: 0.798381 szórás: 0.893522
+17, 6
+average: 29.8111
+p: 0.266667
+time: 10622 ms
+variance: 0.790698 szórás: 0.889212
+16, 6
+average: 28.6605
+p: 0.274479
+time: 10076.2 ms
+variance: 0.78588 szórás: 0.886499
+15, 6
+average: 27.4843
+p: 0.283333
+time: 9501.57 ms
+variance: 0.772133 szórás: 0.878711
+14, 6
+average: 26.2722
+p: 0.283333
+time: 8715.45 ms
+variance: 0.758616 szórás: 0.870986
+13, 6
+average: 25.0265
+p: 0.294231
+time: 8371.38 ms
+variance: 0.72872 szórás: 0.853651
+12, 6
+average: 23.7422
+p: 0.295139
+time: 7689.23 ms
+variance: 0.709539 szórás: 0.842341
+11, 6
+average: 22.4128
+p: 0.309091
+time: 7455 ms
+variance: 0.686889 szórás: 0.828788
+10, 6
+average: 21.0284
+p: 0.311667
+time: 6937.11 ms
+variance: 0.662184 szórás: 0.813747
+9, 6
+average: 19.5834
+p: 0.330556
+time: 6348.78 ms
+variance: 0.646979 szórás: 0.80435
+8, 6
+average: 18.0709
+p: 0.336458
+time: 5410.77 ms
+variance: 0.631856 szórás: 0.794894
+7, 6
+average: 16.4776
+p: 0.364286
+time: 4852.87 ms
+variance: 0.624519 szórás: 0.790265
+6, 6
+average: 14.7899
+p: 0.377778
+time: 4432.06 ms
+variance: 0.621735 szórás: 0.788502
+20, 5
+average: 29.171
+p: 0.255
+time: 9550.8 ms
+variance: 0.504912 szórás: 0.710572
+19, 5
+average: 28.1378
+p: 0.259474
+time: 8997.04 ms
+variance: 0.514426 szórás: 0.717235
+18, 5
+average: 27.0933
+p: 0.264444
+time: 8841.7 ms
+variance: 0.517615 szórás: 0.719455
+17, 5
+average: 26.0462
+p: 0.27
+time: 8265.77 ms
+variance: 0.529953 szórás: 0.727979
+16, 5
+average: 24.9888
+p: 0.27625
+time: 8334.33 ms
+variance: 0.537474 szórás: 0.733126
+15, 5
+average: 23.9249
+p: 0.283333
+time: 7510.43 ms
+variance: 0.54266 szórás: 0.736655
+14, 5
+average: 22.8436
+p: 0.291429
+time: 7022.12 ms
+variance: 0.547593 szórás: 0.739995
+13, 5
+average: 21.7436
+p: 0.300769
+time: 6790.41 ms
+variance: 0.545694 szórás: 0.738711
+12, 5
+average: 20.6223
+p: 0.311667
+time: 6504.91 ms
+variance: 0.548418 szórás: 0.740552
+11, 5
+average: 19.4743
+p: 0.324545
+time: 6275.77 ms
+variance: 0.54206 szórás: 0.736247
+10, 5
+average: 18.288
+p: 0.34
+time: 5556.69 ms
+variance: 0.536963 szórás: 0.732778
+9, 5
+average: 17.0524
+p: 0.34
+time: 4949.81 ms
+variance: 0.519541 szórás: 0.720792
+8, 5
+average: 15.7621
+p: 0.36125
+time: 4700.68 ms
+variance: 0.509103 szórás: 0.713514
+7, 5
+average: 14.3939
+p: 0.364286
+time: 4176.66 ms
+variance: 0.483021 szórás: 0.694997
+6, 5
+average: 12.9621
+p: 0.396667
+time: 3662.85 ms
+variance: 0.511573 szórás: 0.715243
+5, 5
+average: 11.3911
+p: 0.408
+time: 3090.03 ms
+variance: 0.44795 szórás: 0.66929
+20, 4
+average: 25.7039
+p: 0.27625
+time: 7198.22 ms
+variance: 0.230681 szórás: 0.480292
+19, 4
+average: 24.6925
+p: 0.279605
+time: 6950.14 ms
+variance: 0.23644 szórás: 0.486251
+18, 4
+average: 23.6781
+p: 0.283333
+time: 6572.18 ms
+variance: 0.24397 szórás: 0.493933
+17, 4
+average: 22.659
+p: 0.2875
+time: 6341.35 ms
+variance: 0.255392 szórás: 0.505363
+16, 4
+average: 21.6478
+p: 0.292187
+time: 6089.46 ms
+variance: 0.257335 szórás: 0.507282
+15, 4
+average: 20.624
+p: 0.2975
+time: 5801.86 ms
+variance: 0.272674 szórás: 0.522182
+14, 4
+average: 19.6009
+p: 0.303571
+time: 5728.67 ms
+variance: 0.281453 szórás: 0.530522
+13, 4
+average: 18.5731
+p: 0.310577
+time: 5132.65 ms
+variance: 0.291095 szórás: 0.539532
+12, 4
+average: 17.5428
+p: 0.31875
+time: 4953.64 ms
+variance: 0.30335 szórás: 0.550772
+11, 4
+average: 16.5016
+p: 0.328409
+time: 4505.92 ms
+variance: 0.314937 szórás: 0.561193
+10, 4
+average: 15.4455
+p: 0.34
+time: 4451.28 ms
+variance: 0.330908 szórás: 0.575246
+9, 4
+average: 14.3756
+p: 0.354167
+time: 4107.68 ms
+variance: 0.344412 szórás: 0.586866
+8, 4
+average: 13.2716
+p: 0.371875
+time: 4089.44 ms
+variance: 0.352435 szórás: 0.593663
+7, 4
+average: 12.1368
+p: 0.394643
+time: 3462.12 ms
+variance: 0.342918 szórás: 0.585592
+6, 4
+average: 10.9367
+p: 0.425
+time: 2867.75 ms
+variance: 0.338584 szórás: 0.58188
+5, 4
+average: 9.67229
+p: 0.425
+time: 2494.79 ms
+variance: 0.336496 szórás: 0.580083
+4, 4
+average: 8.31357
+p: 0.478125
+time: 2137.09 ms
+variance: 0.460324 szórás: 0.678472
+20, 3
+average: 22.9376
+p: 0.325833
+time: 5642 ms
+variance: 0.0585237 szórás: 0.241917
+19, 3
+average: 21.9358
+p: 0.32807
+time: 5315.98 ms
+variance: 0.0601132 szórás: 0.24518
+18, 3
+average: 20.9322
+p: 0.330556
+time: 5092.28 ms
+variance: 0.0632464 szórás: 0.251488
+17, 3
+average: 19.9301
+p: 0.333333
+time: 4835.89 ms
+variance: 0.0650398 szórás: 0.255029
+16, 3
+average: 18.925
+p: 0.336458
+time: 4505.84 ms
+variance: 0.069409 szórás: 0.263456
+15, 3
+average: 17.9215
+p: 0.34
+time: 4242.16 ms
+variance: 0.0723377 szórás: 0.268957
+14, 3
+average: 16.9154
+p: 0.344048
+time: 3993.12 ms
+variance: 0.0774262 szórás: 0.278256
+13, 3
+average: 15.9121
+p: 0.348718
+time: 3950.4 ms
+variance: 0.0801983 szórás: 0.283193
+12, 3
+average: 14.9026
+p: 0.354167
+time: 3713.66 ms
+variance: 0.0878971 szórás: 0.296475
+11, 3
+average: 13.8953
+p: 0.360606
+time: 3423.18 ms
+variance: 0.0937221 szórás: 0.306141
+10, 3
+average: 12.8858
+p: 0.368333
+time: 3295.71 ms
+variance: 0.101189 szórás: 0.318103
+9, 3
+average: 11.8733
+p: 0.377778
+time: 3170.03 ms
+variance: 0.110677 szórás: 0.332681
+8, 3
+average: 10.8582
+p: 0.389583
+time: 2518.56 ms
+variance: 0.121671 szórás: 0.348814
+7, 3
+average: 9.84134
+p: 0.404762
+time: 2270.89 ms
+variance: 0.133487 szórás: 0.365359
+6, 3
+average: 8.81006
+p: 0.425
+time: 2075.91 ms
+variance: 0.153863 szórás: 0.392253
+5, 3
+average: 7.76007
+p: 0.453333
+time: 1802.34 ms
+variance: 0.182364 szórás: 0.427041
+4, 3
+average: 6.65544
+p: 0.495833
+time: 1522.44 ms
+variance: 0.225838 szórás: 0.475225
+3, 3
+average: 5.44305
+p: 0.566667
+time: 1231.3 ms
+variance: 0.246757 szórás: 0.496746
+20, 2
+average: 21
+p: 0.44625
+time: 4413.54 ms
+variance: 0 szórás: 0
+19, 2
+average: 20
+p: 0.447368
+time: 4263.31 ms
+variance: 0 szórás: 0
+18, 2
+average: 19
+p: 0.448611
+time: 4090.36 ms
+variance: 0 szórás: 0
+17, 2
+average: 18
+p: 0.45
+time: 3822.74 ms
+variance: 0 szórás: 0
+16, 2
+average: 17
+p: 0.451562
+time: 3500.89 ms
+variance: 0 szórás: 0
+15, 2
+average: 16
+p: 0.453333
+time: 3154.61 ms
+variance: 0 szórás: 0
+14, 2
+average: 15
+p: 0.455357
+time: 2955.95 ms
+variance: 0 szórás: 0
+13, 2
+average: 14
+p: 0.457692
+time: 2729.37 ms
+variance: 0 szórás: 0
+12, 2
+average: 13
+p: 0.460417
+time: 2446.72 ms
+variance: 0 szórás: 0
+11, 2
+average: 12
+p: 0.463636
+time: 2239.67 ms
+variance: 0 szórás: 0
+10, 2
+average: 11
+p: 0.4675
+time: 2089.12 ms
+variance: 0 szórás: 0
+9, 2
+average: 10
+p: 0.472222
+time: 1911.85 ms
+variance: 0 szórás: 0
+8, 2
+average: 9
+p: 0.478125
+time: 1733.75 ms
+variance: 0 szórás: 0
+7, 2
+average: 8
+p: 0.485714
+time: 1532.11 ms
+variance: 0 szórás: 0
+6, 2
+average: 7
+p: 0.495833
+time: 1352.5 ms
+variance: 0 szórás: 0
+5, 2
+average: 6
+p: 0.51
+time: 1156.94 ms
+variance: 0 szórás: 0
+4, 2
+average: 5
+p: 0.53125
+time: 985.824 ms
+variance: 0 szórás: 0
+3, 2
+average: 4
+p: 0.566667
+time: 962.017 ms
+variance: 0 szórás: 0
+2, 2
+average: 3
+p: 0.6375
+time: 740.325 ms
+variance: 0 szórás: 0
+20, 1
+average: 20
+p: 0.85
+time: 881.833 ms
+variance: 0 szórás: 0
+19, 1
+average: 19
+p: 0.85
+time: 915.873 ms
+variance: 0 szórás: 0
+18, 1
+average: 18
+p: 0.85
+time: 801.429 ms
+variance: 0 szórás: 0
+17, 1
+average: 17
+p: 0.85
+time: 757.444 ms
+variance: 0 szórás: 0
+16, 1
+average: 16
+p: 0.85
+time: 736.616 ms
+variance: 0 szórás: 0
+15, 1
+average: 15
+p: 0.85
+time: 700.448 ms
+variance: 0 szórás: 0
+14, 1
+average: 14
+p: 0.85
+time: 670.11 ms
+variance: 0 szórás: 0
+13, 1
+average: 13
+p: 0.85
+time: 645.528 ms
+variance: 0 szórás: 0
+12, 1
+average: 12
+p: 0.85
+time: 612.229 ms
+variance: 0 szórás: 0
+11, 1
+average: 11
+p: 0.85
+time: 590.713 ms
+variance: 0 szórás: 0
+10, 1
+average: 10
+p: 0.85
+time: 549.748 ms
+variance: 0 szórás: 0
+9, 1
+average: 9
+p: 0.85
+time: 548.8 ms
+variance: 0 szórás: 0
+8, 1
+average: 8
+p: 0.85
+time: 526.567 ms
+variance: 0 szórás: 0
+7, 1
+average: 7
+p: 0.85
+time: 485.207 ms
+variance: 0 szórás: 0
+6, 1
+average: 6
+p: 0.85
+time: 457.405 ms
+variance: 0 szórás: 0
+5, 1
+average: 5
+p: 0.85
+time: 432.943 ms
+variance: 0 szórás: 0
+4, 1
+average: 4
+p: 0.85
+time: 406.819 ms
+variance: 0 szórás: 0
+3, 1
+average: 3
+p: 0.85
+time: 386.364 ms
+variance: 0 szórás: 0
+2, 1
+average: 2
+p: 0.85
+time: 365.38 ms
+variance: 0 szórás: 0
+1, 1
+average: 1
+p: 0.85
+time: 359.36 ms
+variance: 0 szórás: 0
