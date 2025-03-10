@@ -7,11 +7,13 @@
 #include <random>
 #include <bits/stdc++.h>
 
-///!TODO megcsinálni ugyanúgy a random sorrendű sorsolást ne csak a free élekere
-
+//ötlet randommal lefuttatni, elraktározni a seedet, amivel jó lett és azt a seedet/azokat a seedeket használni
+ 
 unsigned const MAX_VERTICES = 101;
 
 using namespace std;
+
+vector<int> vec;
 
 struct c4
 {
@@ -38,6 +40,7 @@ struct c4
         return idx4;
     }
 };
+
 
 long nCr(int n,int r)
 {
@@ -73,7 +76,7 @@ bool isNotCircle(const c4& circle){
 }*/
 
 void reeval_circles(vector<c4> &circles, const vector<int> &graph){
-    circles.erase(std::remove_if(circles.begin(), circles.end(), [graph](const c4& circle){
+    circles.erase(std::remove_if(circles.begin(), circles.end(), [&graph](const c4& circle){
         if(graph[circle.idx1]!=1 || graph[circle.idx2]!=1 || graph[circle.idx3]!=1 || graph[circle.idx4]!=1){
             return true;
         }
@@ -200,6 +203,7 @@ vector<int> run_iterations(int iteration, int n, int m, double p)
         //cout<<"n/(d-1) = "<<hanyszor<<endl;
         //cout<<"valojaban = "<<iternum<<endl;
         check__for_free_edges(gr, n, m);
+        vec.push_back(number_of_edges(gr));
         if(number_of_edges(gr)>number_of_edges(graph)){
             graph=gr;
         }
@@ -213,10 +217,13 @@ int main(){
     vector<int> n_m_queue;
     cin>>n>>m;
     long long d=nCr(m,2)*nCr(n,2) - (nCr(m,2)*nCr(n-2,2)+2*nCr(m-2,1)*nCr(n-2,2)+nCr(n-2,2));
-    double p=sqrt(sqrt((double)1/(4*d)))+0.12;
+    double p=sqrt(sqrt((double)1/(4*d)))+0.105;
     
-    
-    vector<int> graph=run_iterations(100000, n, m, p);
+    auto start = std::chrono::steady_clock::now();
+
+    vector<int> graph = run_iterations(100000, n, m, p);
+
+    auto end = std::chrono::steady_clock::now();
     /*
         reeval_circles();
         for(auto element : circles){
@@ -235,6 +242,32 @@ int main(){
         edges+=element;
     }
     cout<<endl<<endl<< "edges: "<< edges<< endl;
+
+
+    
+
+    double average=0;
+    double variance=0;
+    int array[] = {0,0,0,0,0,0,0,0};
+    for(const auto& elm : vec){
+        if(elm>=80)
+            array[elm-80]++;
+        average+=elm;
+    }
+    average/=vec.size();
+    for(const auto& elm : vec){
+        variance+=(elm - average) * (elm - average);
+    }
+    variance /= vec.size();
+    double D = sqrt(variance);
+    auto diff = end - start;
+    std::cout <<"time: "<< std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
+    cout << vec.size() << " ugye 100 000"<< endl;
+    cout << endl << "variance: " << variance << " szórás: "<< D << endl;
+    cout << "average: " << average << endl; 
+    for(int i=0;i<8;i++){
+        cout << 80+i << ": " << array[i] << " db" <<endl;
+    }
     stringstream str;
     str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<edges<<".txt";
     ofstream outfile (str.str());
@@ -242,3 +275,149 @@ int main(){
     outfile.close();
     return 0;
 }
+
+
+/*
+random:
+variance: 2.12238 szórás: 1.45684
+average: 80.2798
+80: 26580 db
+81: 26290 db
+82: 14735 db
+83: 4277 db
+84: 564 db
+85: 19 db
+86: 0 db
+87: 0 db
+
+p=0
+variance: 2.09465 szórás: 1.44729
+average: 80.3511
+80: 26334 db
+81: 26911 db
+82: 15713 db
+83: 4575 db
+84: 666 db
+85: 41 db
+86: 0 db
+87: 0 db
+
+p=0.09
+variance: 1.95605 szórás: 1.39859
+average: 80.4829
+80: 25993 db
+81: 28538 db
+82: 17165 db
+83: 5210 db
+84: 702 db
+85: 38 db
+86: 0 db
+87: 0 db
+
+p=0.105
+variance: 1.98126 szórás: 1.40757
+average: 80.475
+80: 26019 db
+81: 28138 db
+82: 17080 db
+83: 5320 db
+84: 712 db
+85: 44 db
+86: 0 db
+87: 0 db
+variance: 1.97326 szórás: 1.40473
+average: 80.4833
+80: 129483 db
+81: 141834 db
+82: 85641 db
+83: 26608 db
+84: 3691 db
+85: 202 db
+86: 4 db
+87: 0 db
+variance: 1.97242 szórás: 1.40443
+average: 80.4816
+80: 129390 db
+81: 141575 db
+82: 85802 db
+83: 26464 db
+84: 3628 db
+85: 221 db
+86: 7 db
+87: 0 db
+
+p=0.12
+variance: 1.98483 szórás: 1.40884
+average: 80.4667
+80: 26160 db
+81: 28184 db
+82: 16820 db
+83: 5247 db
+84: 746 db
+85: 30 db
+86: 1 db
+87: 0 db
+variance: 1.98946 szórás: 1.41048
+average: 80.4694
+80: 129639 db
+81: 141115 db
+82: 85231 db
+83: 26068 db
+84: 3599 db
+85: 200 db
+86: 3 db
+87: 0 db
+variance: 1.98715 szórás: 1.40966
+average: 80.4703
+80: 130067 db
+81: 140860 db
+82: 85158 db
+83: 26140 db
+84: 3683 db
+85: 193 db
+86: 4 db
+87: 0 db
+
+p=0.2
+variance: 2.26752 szórás: 1.50583
+average: 80.2393
+80: 26013 db
+81: 25753 db
+82: 14798 db
+83: 4266 db
+84: 556 db
+85: 21 db
+86: 1 db
+87: 0 db
+
+p=0.3
+variance: 3.11217 szórás: 1.76413
+average: 79.5868
+80: 24056 db
+81: 19559 db
+82: 9526 db
+83: 2403 db
+84: 294 db
+85: 16 db
+86: 1 db
+87: 0 db
+
+
+edges: 85
+time: 83694.9 ms
+100000 ugye 100 000
+
+variance: 1.96694 szórás: 1.40248
+average: 80.4901
+80: 25926 db
+81: 28346 db
+82: 17267 db
+83: 5301 db
+84: 761 db
+85: 46 db
+86: 0 db
+87: 0 db
+
+
+time: 27295.4 ms
+*/
