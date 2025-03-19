@@ -19,6 +19,49 @@ struct c4{
         : u(u_), u2(u2_), v(v_), v2(v2_) {}
 };
 
+long nCr(int n,int r)
+{
+    long ans=1;
+    r=r>n-r?n-r:r;
+    int j=1;
+    for(;j<=r;j++,n--)
+    {
+        if(n%j==0)
+        {
+            ans*=n/j;
+        }else
+        if(ans%j==0)
+        {
+            ans=ans/j*n;
+        }else
+        {
+            ans=(ans*n)/j;
+        }
+    }
+    return ans;
+}
+
+
+int upperBound(int s, int t, int m, int n){
+    int p=s-1;
+    if(m>n){
+        swap(s, t);
+        swap(m, n);
+    }
+    if(m<s)
+        return m*s;
+    double previous=numeric_limits<double>::max();
+    double result=numeric_limits<double>::max()- 1e307;
+    while(previous>result){
+        previous=result;
+        result =
+        ( (double)(t - 1) / nCr(p, s - 1) ) * nCr(m, s)
+        + n * ((p + 1) * (s - 1)) / (double)s;
+        p++;
+    }
+    return (int)previous;
+}
+
 // Function to check if adding edge (u, v) creates a K_{2,2}
 bool createsK22(const vector<vector<int>>& adj, int m, int n, int u, int v) {
     // Check for another vertex u2 that shares neighbor v
@@ -142,8 +185,7 @@ int main() {
             int v = e.second;
             if(adj[u][v]==1){
                 ++edgeCount;
-            }
-            if (adj[u][v]!=1&&!createsK22(adj, m, n, u, v)) {
+            }else if (!createsK22(adj, m, n, u, v)) {
                 adj[u][v] = 1;
                 ++edgeCount;
             }
