@@ -232,15 +232,15 @@ int main() {
         cout<<m<<", "<<n<<endl;
         int iterations = 50000;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
-        double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         logs stats;
-        vector<vector<int>> graph(m, vector<int>(n, 0));
         stats.startTimer();
+        vector<vector<int>> graph(m, vector<int>(n, 0));
+        ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
             vector<pair<int, int>> edges;
 
-            run_with_p(adj, p, m, n);
+            ///run_with_p(adj, p, m, n);
 
             // Generate all possible edges
             for (int u = 0; u < m; ++u)
@@ -272,10 +272,11 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("MT_log.txt", std::ios_base::app);
+        logfile.open("RAND_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
-        logfile<<" p: "<<p<<";"<<endl;
+        logfile<<endl;
+        ///logfile<<" p: "<<p<<";"<<endl;
         logfile.close();
 
         stringstream str;
@@ -287,7 +288,7 @@ int main() {
     }
 
     stringstream str;
-    str<<"MT_results.txt";
+    str<<"RAND_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -297,6 +298,11 @@ int main() {
 
     auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     cout << "Execution time: " << duration << " seconds\n";
+
+    ofstream logfile;
+    logfile.open("exec_time.txt", std::ios_base::app);
+    logfile<<"RAND: "<<duration<<"seconds\n";
+    logfile.close();
 
     return 0;
 }
