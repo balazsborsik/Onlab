@@ -19,6 +19,51 @@ struct c4{
         : u(u_), u2(u2_), v(v_), v2(v2_) {}
 };
 
+struct logs{
+    int siz = 0;          // Count of numbers
+    int maximum = 0;
+    double mean = 0.0;  // Running mean
+    double M2 = 0.0;    // Sum of squares of differences from the mean
+    array<int, 5> top5 = {0,0,0,0,0};
+
+    void add(int x) {
+        siz += 1;
+        double delta = x - mean;
+        mean += delta / siz;
+        double delta2 = x - mean;
+        M2 += delta * delta2;
+        if(x>maximum){
+            for(int i=x-maximum;i<top5.size();i++){
+                top5[i-(x-maximum)]=top5[i];
+            }
+            for(int i=max((int)top5.size()-(x-maximum),0);i<top5.size();i++){
+                top5[i]=0;
+            }
+            maximum=x;
+        }
+        if(maximum-x<top5.size()){
+            top5[top5.size()-1-(maximum-x)]++;
+        }
+    }
+
+    double variance() const {
+        return (siz > 0) ? M2 / (siz) : 0.0;  // Sample variance
+    }
+
+    void print(ostream& out=cout) const {
+        out << "Size: " << siz << "; ";
+        out << "Max: " << maximum << "; ";
+        out << "Mean: " << mean << "; ";
+        out << "Variance: " << variance() << "; ";
+        out << "Top5_Histogram_(relative_to_max): ";
+        for (auto count : top5) {
+            out << count << " ";
+        }
+        out <<";"<< endl;
+    }
+
+};
+
 long nCr(int n,int r)
 {
     long ans=1;
@@ -142,6 +187,16 @@ void run_with_p(vector<vector<int>>& adj, double p, int m, int n){
     while(!circles.empty()){
         reflip_circle(circles, circles[0], adj, p, m, n);
         reeval_circles(circles, adj);
+    }
+}
+
+void print_graph(const vector<vector<int>>& graph, ostream& out=cout){
+    for(const auto& vertex : graph){
+        for (const auto& edge : vertex)
+        {
+           out<<edge<<' ';
+        }
+        out<<endl;
     }
 }
 
