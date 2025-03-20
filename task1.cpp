@@ -106,7 +106,7 @@ void reeval_circles(vector<c4> &circles, const vector<vector<int>> &graph){
     }), circles.end());
 }
 
-void reflip_circle(vector<c4>& new_circles, const c4& circle, vector<vector<int>> &adj, double p, int m, int n){
+void reflip_circle(vector<c4>& new_circles, const c4 circle, vector<vector<int>> &adj, double p, int m, int n){
     adj[circle.u][circle.v]=0;
     adj[circle.u][circle.v2]=0;
     adj[circle.u2][circle.v]=0;
@@ -140,11 +140,7 @@ void run_with_p(vector<vector<int>>& adj, double p, int m, int n){
         }
     }
     while(!circles.empty()){
-        vector<c4> new_circles;
-        for(const auto& elm : circles){
-            reflip_circle(new_circles, elm, adj, p, m, n);
-        }
-        circles.insert(circles.end(), new_circles.begin(), new_circles.end());
+        reflip_circle(circles, circles[0], adj, p, m, n);
         reeval_circles(circles, adj);
     }
 }
