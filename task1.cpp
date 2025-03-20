@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -24,7 +26,12 @@ struct logs{
     int maximum = 0;
     double mean = 0.0;  // Running mean
     double M2 = 0.0;    // Sum of squares of differences from the mean
+    std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
     array<int, 5> top5 = {0,0,0,0,0};
+
+    void startTimer(){
+        start=std::chrono::steady_clock::now();
+    }
 
     void add(int x) {
         siz += 1;
@@ -51,15 +58,16 @@ struct logs{
     }
 
     void print(ostream& out=cout) const {
-        out << "Size: " << siz << "; ";
         out << "Max: " << maximum << "; ";
         out << "Mean: " << mean << "; ";
         out << "Variance: " << variance() << "; ";
+        out << "Size: " << siz << "; ";
+        out <<"Time: "<< std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now()-start).count() << " ms" << "; ";
         out << "Top5_Histogram_(relative_to_max): ";
         for (auto count : top5) {
             out << count << " ";
         }
-        out <<";"<< endl;
+        out <<";";
     }
 
 };
@@ -204,53 +212,88 @@ int main() {
     srand(time(0));
 
     int m, n;
-    cout << "Enter number of vertices on side U (m): ";
+    /*cout << "Enter number of vertices on side U (m): ";
     cin >> m;
     cout << "Enter number of vertices on side V (n): ";
-    cin >> n;
-
-    int iterations = 100000;  // Number of trials
-    int maxEdges = 0;       // Best lower bound found
-
+    cin >> n;*/
+    
+    vector<vector<int>> results(29, vector<int>(29,0));
+    vector<pair<int,int>> n_mqueue;
+    for(int firstcord=2;firstcord<=30;firstcord++){
+        for (int secondcord = firstcord; secondcord <= 30; secondcord++)
+        {
+            n_mqueue.emplace_back(firstcord,secondcord);
+        }
+    }
     auto start = chrono::steady_clock::now();
+    for(int iters=0;iters<n_mqueue.size();iters++){
+        int m=n_mqueue[iters].first;
+        int n=n_mqueue[iters].second;
+        cout<<m<<", "<<n<<endl;
+        int iterations = 50000;  // Number of trials
+        int maxEdges = 0;       // Best lower bound found
+        double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
+        logs stats;
+        vector<vector<int>> graph(m, vector<int>(n, 0));
+        stats.startTimer();
+        for (int iter = 0; iter < iterations; ++iter) {
+            vector<vector<int>> adj(m, vector<int>(n, 0));
+            vector<pair<int, int>> edges;
 
-    for (int iter = 0; iter < iterations; ++iter) {
-        vector<vector<int>> adj(m, vector<int>(n, 0));
-        vector<pair<int, int>> edges;
+            run_with_p(adj, p, m, n);
 
-        run_with_p(adj, 0.18, m, n);
+            // Generate all possible edges
+            for (int u = 0; u < m; ++u)
+                for (int v = 0; v < n; ++v)
+                    edges.emplace_back(u, v);
 
-        // Generate all possible edges
-        for (int u = 0; u < m; ++u)
-            for (int v = 0; v < n; ++v)
-                edges.emplace_back(u, v);
+            // Shuffle edge order randomly
+            random_shuffle(edges.begin(), edges.end());
 
-        // Shuffle edge order randomly
-        random_shuffle(edges.begin(), edges.end());
+            int edgeCount = 0;
 
-        int edgeCount = 0;
+            // Try to add edges one by one, only if they don't create a K_{2,2}
+            for (auto& e : edges) {
+                int u = e.first;
+                int v = e.second;
+                if(adj[u][v]==1){
+                    ++edgeCount;
+                }else if (!createsK22(adj, m, n, u, v)) {
+                    adj[u][v] = 1;
+                    ++edgeCount;
+                }
+            }
 
-        // Try to add edges one by one, only if they don't create a K_{2,2}
-        for (auto& e : edges) {
-            int u = e.first;
-            int v = e.second;
-            if(adj[u][v]==1){
-                ++edgeCount;
-            }else if (!createsK22(adj, m, n, u, v)) {
-                adj[u][v] = 1;
-                ++edgeCount;
+            stats.add(edgeCount);
+            if (edgeCount > maxEdges) {
+                maxEdges = edgeCount;
+                graph=adj;
             }
         }
 
-        if (edgeCount > maxEdges) {
-            maxEdges = edgeCount;
-            cout << "New lower bound found: " << maxEdges << " edges (iteration " << iter << ")" << endl;
-        }
+        ofstream logfile;
+        logfile.open("MT_log.txt", std::ios_base::app);
+        logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
+        stats.print(logfile);
+        logfile<<" p: "<<p<<";"<<endl;
+        logfile.close();
+
+        stringstream str;
+        str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<maxEdges<<".txt";
+        ofstream outfile (str.str());
+        print_graph( graph, outfile);
+        outfile.close();
+        results[n-2][m-2]=maxEdges;
     }
 
-    auto end = chrono::steady_clock::now();
+    stringstream str;
+    str<<"MT_results.txt";
+    ofstream resfile (str.str());
+    print_graph( results, resfile);
+    resfile.close();
+    print_graph(results);
 
-    cout << "\nEstimated lower bound for Z(" << m << ", " << n << "; 2, 2): " << maxEdges << endl;
+    auto end = chrono::steady_clock::now();
 
     auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     cout << "Execution time: " << duration << " seconds\n";
