@@ -11,6 +11,46 @@
 #include <chrono>
 using namespace std;
 
+struct dynp{
+    vector<int> edgenum_m;
+    vector<int> edgenum_n;
+    int expected_m;
+    int expected_n;
+    double expected_n_percent;
+
+    dynp(int n, int m,  int upper_bound)
+    {   
+        expected_m=((double)upper_bound/m+0.5);
+        expected_n=((double)upper_bound/n+0.5);
+        expected_n_percent=(double)upper_bound/(n*m);
+        edgenum_n.assign(n,0);
+        edgenum_m.assign(m,2.0);
+    }
+
+    double get_multiplier(int v_m){
+        if(edgenum_m[v_m]>=expected_m){
+            return 0.15;
+        }
+        return 1.4-1.1*((double)edgenum_m[v_m]/expected_m);
+    }
+
+    double get_p(int v_m, int v_n){
+        int n=edgenum_n[v_n];
+        return 4*get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent);
+    }
+
+    void delete_edge(int v_m, int v_n){
+        edgenum_m[v_m]--;
+        edgenum_n[v_n]--;
+    }
+
+    void add_edge(int v_m, int v_n){
+        edgenum_m[v_m]++;
+        edgenum_n[v_n]++;
+    }
+
+};
+
 struct c4{
     int u;
     int u2;
@@ -159,41 +199,51 @@ void reeval_circles(vector<c4> &circles, const vector<vector<int>> &graph){
     }), circles.end());
 }
 
-void reflip_circle(vector<c4>& new_circles, const c4 circle, vector<vector<int>> &adj, double p, int m, int n){
+void reflip_circle(vector<c4>& new_circles, const c4 circle, vector<vector<int>> &adj, dynp &dyn_p, int m, int n){
     adj[circle.u][circle.v]=0;
     adj[circle.u][circle.v2]=0;
     adj[circle.u2][circle.v]=0;
     adj[circle.u2][circle.v2]=0;
-    if(p>((double)rand()/(double)RAND_MAX)){
+    dyn_p.delete_edge(circle.u,circle.v);
+    dyn_p.delete_edge(circle.u,circle.v2);
+    dyn_p.delete_edge(circle.u2,circle.v);
+    dyn_p.delete_edge(circle.u2,circle.v2);
+    if(dyn_p.get_p(circle.u,circle.v)>((double)rand()/(double)RAND_MAX)){
         storeK22(new_circles,adj,m,n,circle.u,circle.v);
         adj[circle.u][circle.v]=1;
+        dyn_p.add_edge(circle.u,circle.v);
+
     }
-    if(p>((double)rand()/(double)RAND_MAX)){
+    if(dyn_p.get_p(circle.u,circle.v2)>((double)rand()/(double)RAND_MAX)){
         storeK22(new_circles,adj,m,n,circle.u,circle.v2);
         adj[circle.u][circle.v2]=1;
+        dyn_p.add_edge(circle.u,circle.v2);
     }
-    if(p>((double)rand()/(double)RAND_MAX)){
+    if(dyn_p.get_p(circle.u2,circle.v)>((double)rand()/(double)RAND_MAX)){
         storeK22(new_circles,adj,m,n,circle.u2,circle.v);
         adj[circle.u2][circle.v]=1;
+        dyn_p.add_edge(circle.u2,circle.v);
     }
-    if(p>((double)rand()/(double)RAND_MAX)){
+    if(dyn_p.get_p(circle.u2,circle.v2)>((double)rand()/(double)RAND_MAX)){
         storeK22(new_circles,adj,m,n,circle.u2,circle.v2);
         adj[circle.u2][circle.v2]=1;
+        dyn_p.add_edge(circle.u2,circle.v2);
     }
 }
 
-void run_with_p(vector<vector<int>>& adj, double p, int m, int n){
+void run_with_p(vector<vector<int>>& adj, dynp &dyn_p, int m, int n){
     vector<c4> circles;
     for (int u = 0; u < m; ++u){
         for (int v = 0; v < n; ++v){
-            if(p>((double)rand()/(double)RAND_MAX)){
+            if(dyn_p.get_p(u,v)>((double)rand()/(double)RAND_MAX)){
                 storeK22(circles,adj,m,n,u,v);
                 adj[u][v]=1;
+                dyn_p.add_edge(u,v);
             }
         }
     }
     while(!circles.empty()){
-        reflip_circle(circles, circles[0], adj, p, m, n);
+        reflip_circle(circles, circles[0], adj, dyn_p, m, n);
         reeval_circles(circles, adj);
     }
 }
@@ -225,6 +275,7 @@ int main() {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
+
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
@@ -239,8 +290,8 @@ int main() {
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
             vector<pair<int, int>> edges;
-
-            ///run_with_p(adj, p, m, n);
+            dynp dyn_p(n, m, upperBound(2,2,n,m));
+            run_with_p(adj, dyn_p, m, n);
 
             // Generate all possible edges
             for (int u = 0; u < m; ++u)
@@ -263,7 +314,6 @@ int main() {
                     ++edgeCount;
                 }
             }
-
             stats.add(edgeCount);
             if (edgeCount > maxEdges) {
                 maxEdges = edgeCount;
@@ -272,7 +322,7 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("RAND_log.txt", std::ios_base::app);
+        logfile.open("DYNP_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         logfile<<endl;
@@ -286,9 +336,9 @@ int main() {
         outfile.close();
         results[n-2][m-2]=maxEdges;
     }
-
+    
     stringstream str;
-    str<<"RAND_results.txt";
+    str<<"DYNP_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -301,7 +351,7 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"RAND: "<<duration<<"seconds\n";
+    logfile<<"DYNP: "<<duration<<"seconds\n";
     logfile.close();
 
     return 0;
