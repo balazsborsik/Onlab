@@ -1,2 +1,3 @@
 MT: 3154seconds
 RAND: 2411seconds
+DYNP: 3357seconds

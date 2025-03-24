@@ -36,7 +36,7 @@ struct dynp{
 
     double get_p(int v_m, int v_n){
         int n=edgenum_n[v_n];
-        return 4*get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent);
+        return min(4*get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent),0.8);
     }
 
     void delete_edge(int v_m, int v_n){
@@ -275,7 +275,6 @@ int main() {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
-
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
