@@ -67,7 +67,7 @@ void printMatrix(const vector<vector<int>>& matrix) {
                 if(val>0){
                     cout << GREEN << val << RESET << " ";
                 }else{
-                    cout << RED << val << RESET << " ";
+                    cout << RED << val*-1 << RESET << " ";
                 }
             }else{
                 cout << val << " ";
