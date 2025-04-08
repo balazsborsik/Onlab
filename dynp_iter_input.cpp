@@ -54,6 +54,7 @@ struct dynp{
     {   
         expected_m=((double)upper_bound/m+0.5);
         expected_n=((double)upper_bound/n+0.5);
+        cout<<n<<" , "<<m<<upper_bound<<expected_m<<" "<<expected_n<<endl;
         expected_n_percent=(double)upper_bound/(n*m);
         edgenum_n.assign(n,0);
         edgenum_m.assign(m,2.0);
@@ -63,11 +64,11 @@ struct dynp{
     {   
         int m=graph.size();
         int n=graph[0].size();
-        expected_m=((double)upper_bound/m+0.5);
+        expected_m=((double)upper_bound/m+0.5); // zárójel nélkül nincs értelme
         expected_n=((double)upper_bound/n+0.5);
         expected_n_percent=(double)upper_bound/(n*m);
         edgenum_n.assign(n,0);
-        edgenum_m.assign(m,0); //!! nem így volt hanem valamiért 2 volt
+        edgenum_m.assign(m,2.0); //!! nem így volt hanem valamiért 2 volt
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
                 if(graph[i][j]){    // ha van él
@@ -290,9 +291,6 @@ void reflip_circle(vector<c4>& new_circles, const vector<vector<int>> &edges_in_
     dyn_p.delete_edge(edge.first, edge.second);
 }
 
-
-
-
 void run_with_p(vector<vector<int>>& adj, dynp &dyn_p, int m, int n){
     vector<c4> circles;
     vector<vector<int>> edges_in_circles(m, vector<int>(n, 0));
@@ -343,16 +341,11 @@ vector<vector<int>> create_from_file(int m, int n, string filename){
 int main() {
     srand(time(0));
 
-    cout<<readBestGraph(21,25);
-    print_graph(create_from_file(21,25,readBestGraph(21,25)));
-
-    return 0;
     int m, n;
     /*cout << "Enter number of vertices on side U (m): ";
     cin >> m;
     cout << "Enter number of vertices on side V (n): ";
     cin >> n;*/
-    
     vector<vector<int>> results(29, vector<int>(29,0));
     vector<pair<int,int>> n_mqueue;
     /*for(int firstcord=2;firstcord<=30;firstcord++){
@@ -365,25 +358,34 @@ int main() {
     //n_mqueue.emplace_back(29,14);
     //n_mqueue.emplace_back(18,28);
     //n_mqueue.emplace_back(19,27);
-    n_mqueue.emplace_back(17,30);
+    n_mqueue.emplace_back(22,30);
     //n_mqueue.emplace_back(21,25);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 200000;  // Number of trials
+        int iterations = 20000;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
-        vector<vector<int>> inputgraph(m, vector<int>(n, 0));
+        vector<vector<int>> inputgraph=create_from_file(21,25,readBestGraph(21,25));
 
         ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
+            for(int i=0;i<21;i++){
+                for(int j=0;j<25;j++){
+                    adj[i][j]=inputgraph[i][j];
+                }
+            }
+            for(int j=25;j<n;j++){
+                adj[21][j]=1;
+            }
             vector<pair<int, int>> edges;
-            dynp dyn_p(n, m, upperBound(2,2,n,m));
+            //dynp dyn_p(n, m, upperBound(2,2,n,m));
+            dynp dyn_p(adj, upperBound(2,2,n,m));
             run_with_p(adj, dyn_p, m, n);
 
             // Generate all possible edges
@@ -415,7 +417,7 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("DYNP_ITER_log.txt", std::ios_base::app);
+        logfile.open("DYNP_ITER_INPUT_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         logfile<<endl;
@@ -429,6 +431,9 @@ int main() {
         print_graph( graph, outfile);
         outfile.close();
         results[n-2][m-2]=maxEdges;
+
+        cout<<maxEdges<<endl;
+        cout<<readBestGraph(22,30)<<endl;
     }
     
     /*stringstream str;
