@@ -24,19 +24,21 @@ struct dynp{
         expected_n=((double)upper_bound/n+0.5);
         expected_n_percent=(double)upper_bound/(n*m);
         edgenum_n.assign(n,0);
-        edgenum_m.assign(m,2.0);
+        edgenum_m.assign(m,0);
     }
 
     double get_multiplier(int v_m){
         if(edgenum_m[v_m]>=expected_m){
-            return 0.15;
+            if(edgenum_m[v_m]==expected_m)
+                return 0.9;
+            return 0.5;
         }
-        return 1.4-1.1*((double)edgenum_m[v_m]/expected_m);
+        return 6.7-5.6*((double)edgenum_m[v_m]/expected_m);
     }
 
     double get_p(int v_m, int v_n){
         int n=edgenum_n[v_n];
-        return min(4*get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent),0.8);
+        return min(get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent),0.8);
     }
 
     void delete_edge(int v_m, int v_n){

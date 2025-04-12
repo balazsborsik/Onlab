@@ -3,3 +3,5 @@ RAND: 2411seconds
 DYNP: 3357seconds
 REAL_MT: 4499seconds
 DYNP_ITER: 2445seconds
+DYNP: 4479seconds
+DYNP_ITER: 3739seconds
