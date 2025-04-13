@@ -54,24 +54,23 @@ struct dynp{
     {   
         expected_m=((double)upper_bound/m+0.5);
         expected_n=((double)upper_bound/n+0.5);
-        cout<<n<<" , "<<m<<upper_bound<<expected_m<<" "<<expected_n<<endl;
         expected_n_percent=(double)upper_bound/(n*m);
         edgenum_n.assign(n,0);
-        edgenum_m.assign(m,2.0);
+        edgenum_m.assign(m,0);
     }
 
     dynp(const vector<vector<int>> &graph, int upper_bound)
     {   
         int m=graph.size();
         int n=graph[0].size();
-        expected_m=((double)upper_bound/m+0.5); // zárójel nélkül nincs értelme
+        expected_m=((double)upper_bound/m+0.5);
         expected_n=((double)upper_bound/n+0.5);
         expected_n_percent=(double)upper_bound/(n*m);
         edgenum_n.assign(n,0);
-        edgenum_m.assign(m,2.0); //!! nem így volt hanem valamiért 2 volt
+        edgenum_m.assign(m,0);
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
-                if(graph[i][j]){    // ha van él
+                if(graph[i][j]){
                     edgenum_m[i]++;
                     edgenum_n[j]++;
                 }
@@ -81,14 +80,16 @@ struct dynp{
 
     double get_multiplier(int v_m){
         if(edgenum_m[v_m]>=expected_m){
-            return 0.15;
+            if(edgenum_m[v_m]==expected_m)
+                return 0.9;
+            return 0.5;
         }
-        return 1.4-1.1*((double)edgenum_m[v_m]/expected_m);
+        return 6.7-5.6*((double)edgenum_m[v_m]/expected_m);
     }
 
     double get_p(int v_m, int v_n){
         int n=edgenum_n[v_n];
-        return min(4*get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent),0.8);
+        return min(get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent),0.8);
     }
 
     void delete_edge(int v_m, int v_n){
