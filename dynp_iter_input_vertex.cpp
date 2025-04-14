@@ -18,7 +18,7 @@ vector<vector<int>> create_from_file(int m, int n, string filename){
     std::ifstream file(filename);
     for(int i=0;i<m;i++){
         for(int j=0;j<n;j++){
-            int edge;
+            int edge=0;
             file>>edge;
             graph[i][j]=edge;
         }
@@ -313,10 +313,10 @@ void reflip_circle(vector<c4>& new_circles, const vector<vector<int>> &edges_in_
 
 
 
-void run_with_p(vector<vector<int>>& adj, dynp &dyn_p, int m, int n){
+void run_with_p(vector<vector<int>>& adj, dynp &dyn_p, int insideIterations, int m, int n){
     vector<c4> circles;
     vector<vector<int>> edges_in_circles(m, vector<int>(n, 0));
-    for(int itr=0; itr<100;itr++){
+    for(int itr=0; itr<insideIterations;itr++){
         for (int u = 0; u < m; ++u){
             for (int v = 0; v < n; ++v){
                 if(dyn_p.get_p(u,v)>((double)rand()/(double)RAND_MAX)){
@@ -465,12 +465,14 @@ int main() {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
+    //n_mqueue.emplace_back(18,28);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
         int iterations = 1000;  // Number of trials
+        int insideIterations = 5;
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
@@ -489,7 +491,7 @@ int main() {
 
             //dynp dyn_p(n, m, upperBound(2,2,n,m));
             dynp dyn_p(adj, upperBound(2,2,n,m));
-            run_with_p(adj, dyn_p, m, n);
+            run_with_p(adj, dyn_p, insideIterations, m, n);
 
             // Generate all possible edges
             for (int u = 0; u < m; ++u)
@@ -519,14 +521,16 @@ int main() {
             }
         }
 
-        ofstream logfile;
-        logfile.open("DYNP_ITER_INPUT_VERTEX_M1_log.txt", std::ios_base::app);
+        /*ofstream logfile;
+        logfile.open("DYNP_ITER_INPUT_VERTEX_M_QUICK_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         //logfile<<endl;
         ///logfile<<" p: "<<p<<";"<<endl;
-        logfile<<" iter: "<<200<<";"<<endl;
+        logfile<<" iter: "<<insideIterations<<";"<<endl;
         logfile.close();
+        */
+        //cout<<maxEdges<<endl;
 
         stringstream str;
         str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<maxEdges<<".txt";
@@ -536,8 +540,8 @@ int main() {
         results[n-2][m-2]=maxEdges;
     }
     
-    stringstream str;
-    str<<"DYNP_ITER_INPUT_VERTEX_M1_results.txt";
+    /*stringstream str;
+    str<<"DYNP_ITER_INPUT_VERTEX_M_QUICK_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -550,8 +554,8 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"DYNP_ITER_INPUT_VERTEX_M1: "<<duration<<"seconds\n";
-    logfile.close();
+    logfile<<"DYNP_ITER_INPUT_VERTEX_M_QUICK: "<<duration<<"seconds\n";
+    logfile.close();*/
 
     return 0;
 }
