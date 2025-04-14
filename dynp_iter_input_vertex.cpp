@@ -10,7 +10,7 @@
 #include <random>
 #include <chrono>
 #include <regex>
-#include <windows.h>
+#include <dirent.h>
 using namespace std;
 
 vector<vector<int>> create_from_file(int m, int n, string filename){
@@ -27,23 +27,27 @@ vector<vector<int>> create_from_file(int m, int n, string filename){
     return graph;
 }
 
-std::string readBestGraph(int m, int n) {
-    WIN32_FIND_DATAA findData;
+string readBestGraph(int m, int n) {
     stringstream filestart;
-    filestart<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_";
-    HANDLE hFind = FindFirstFileA(("output\\"+filestart.str()+"*.txt").c_str(), &findData);
-    if (hFind == INVALID_HANDLE_VALUE) {
-        std::cerr << "No matching files found.\n";
+    filestart << "Z" << m << "_" << n << "_" << 2 << "_" << 2 << "_";
+    string prefix = filestart.str();
+
+    regex pattern(prefix + R"((\d+)\.txt)");
+
+    DIR* dir = opendir("output");
+    if (!dir) {
+        cerr << "Failed to open 'output' directory." << endl;
         return "";
     }
 
-    std::regex pattern(filestart.str() + R"((\d+)\.txt)");
+    struct dirent* entry;
     int maxNum = -1;
-    std::string result;
+    string result;
 
-    do {
-        std::string filename = findData.cFileName;
-        std::smatch match;
+    while ((entry = readdir(dir)) != nullptr) {
+        string filename = entry->d_name;
+
+        smatch match;
         if (std::regex_match(filename, match, pattern)) {
             int num = std::stoi(match[1]);
             if (num > maxNum) {
@@ -51,9 +55,9 @@ std::string readBestGraph(int m, int n) {
                 result = "output\\" + filename;
             }
         }
-    } while (FindNextFileA(hFind, &findData));
+    }
 
-    FindClose(hFind);
+    closedir(dir);
     return result;
 }
 
@@ -342,6 +346,108 @@ void print_graph(const vector<vector<int>>& graph, ostream& out=cout){
     }
 }
 
+void addVertexToM(vector<vector<int>> &adj, const vector<vector<int>> &inputgraph){
+    int m=adj.size();
+    int n=adj[0].size();
+    for(int i=0;i<m-1;i++){
+        for(int j=0;j<n;j++){
+            adj[i][j]=inputgraph[i][j];
+        }
+    }
+
+    vector<int> temp(n, 0);
+    for(int i=0;i<n;i++){
+        temp[i]=i;
+    }
+    vector<int> chosenvertices;
+    int best_size=0;
+    for(int k=0;k<m*n/2+5;k++){
+        random_shuffle(begin(temp), end(temp));
+        vector<int> vertices;
+        vector<int> neighbours(m, 0);
+        for(int i=0;i<n;i++){
+            bool addvertex=true;
+            int vertex=temp[i];
+            for(int j=0;j<m;j++){
+                if(adj[j][vertex]==1&&neighbours[j]==1){
+                    addvertex=false;
+                    break;
+                }
+            }
+            if(addvertex){
+                for(int j=0;j<m;j++){
+                    if(adj[j][vertex]==1)
+                        neighbours[j]=1;
+                }
+                vertices.push_back(vertex);
+            }
+        }
+        if(vertices.size()>best_size){
+            best_size=vertices.size();
+            chosenvertices=vertices;
+        }
+    }
+    for(const auto& elm : chosenvertices){
+        adj[m-1][elm]=1;
+    }
+}
+
+void addVertexToN(vector<vector<int>> &adj, const vector<vector<int>> &inputgraph){
+    int m=adj.size();
+    int n=adj[0].size();
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n-1;j++){
+            adj[i][j]=inputgraph[i][j];
+        }
+    }
+
+    vector<int> temp(m, 0);
+    for(int i=0;i<m;i++){
+        temp[i]=i;
+    }
+    vector<int> chosenvertices;
+    int best_size=0;
+    for(int k=0;k<m*n/2+5;k++){
+        random_shuffle(begin(temp), end(temp));
+        vector<int> vertices;
+        vector<int> neighbours(n, 0);
+        for(int i=0;i<m;i++){
+            bool addvertex=true;
+            int vertex=temp[i];
+            for(int j=0;j<n;j++){
+                if(adj[vertex][j]==1&&neighbours[j]==1){
+                    addvertex=false;
+                    break;
+                }
+            }
+            if(addvertex){
+                for(int j=0;j<n;j++){
+                    if(adj[vertex][j]==1)
+                        neighbours[j]=1;
+                }
+                vertices.push_back(vertex);
+            }
+        }
+        if(vertices.size()>best_size){
+            best_size=vertices.size();
+            chosenvertices=vertices;
+        }
+    }
+    for(const auto& elm : chosenvertices){
+        adj[elm][n-1]=1;
+    }
+}
+
+void createStartingGraphFromInput(vector<vector<int>> &adj, const vector<vector<int>> &inputgraph){
+    int m=adj.size();
+    int n=adj[0].size();
+    if(m-1 == inputgraph.size()&&n == inputgraph[0].size())
+        addVertexToM(adj, inputgraph);
+    else if(m == inputgraph.size()&&n-1 == inputgraph[0].size())
+        addVertexToN(adj, inputgraph);
+    else __throw_invalid_argument("az input és az adj gráfok nem megfelelő méretűek");
+}
+
 int main() {
     srand(time(0));
 
@@ -359,7 +465,6 @@ int main() {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
-    //n_mqueue.emplace_back(29,14);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
@@ -370,52 +475,16 @@ int main() {
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
+
         vector<vector<int>> inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
+        //vector<vector<int>> inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
 
         ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
-            for(int i=0;i<m-1;i++){
-                for(int j=0;j<n;j++){
-                    adj[i][j]=inputgraph[i][j];
-                }
-            }
-
-            vector<int> temp(n, 0);
-            for(int i=0;i<n;i++){
-                temp[i]=i;
-            }
-            vector<int> chosenvertices;
-            int best_size=0;
-            for(int k=0;k<m*n/2+5;k++){
-                random_shuffle(begin(temp), end(temp));
-                vector<int> vertices;
-                vector<int> neighbours(m, 0);
-                for(int i=0;i<n;i++){
-                    bool addvertex=true;
-                    int vertex=temp[i];
-                    for(int j=0;j<m;j++){
-                        if(adj[j][vertex]==1&&neighbours[j]==1){
-                            addvertex=false;
-                        }
-                    }
-                    if(addvertex){
-                        for(int j=0;j<m;j++){
-                            if(adj[j][vertex]==1)
-                                neighbours[j]=1;
-                        }
-                        vertices.push_back(vertex);
-                    }
-                }
-                if(vertices.size()>best_size){
-                    best_size=vertices.size();
-                    chosenvertices=vertices;
-                }
-            }
-            for(const auto& elm : chosenvertices){
-                adj[m-1][elm]=1;
-            }
-
+            
+            createStartingGraphFromInput(adj, inputgraph);
+            
             vector<pair<int, int>> edges;
 
             //dynp dyn_p(n, m, upperBound(2,2,n,m));
@@ -451,7 +520,7 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("DYNP_ITER_INPUT_VERTEX_log.txt", std::ios_base::app);
+        logfile.open("DYNP_ITER_INPUT_VERTEX_M1_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         //logfile<<endl;
@@ -468,7 +537,7 @@ int main() {
     }
     
     stringstream str;
-    str<<"DYNP_ITER_INPUT_VERTEX_results.txt";
+    str<<"DYNP_ITER_INPUT_VERTEX_M1_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -481,7 +550,7 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"DYNP_ITER_INPUT_VERTEX: "<<duration<<"seconds\n";
+    logfile<<"DYNP_ITER_INPUT_VERTEX_M1: "<<duration<<"seconds\n";
     logfile.close();
 
     return 0;
