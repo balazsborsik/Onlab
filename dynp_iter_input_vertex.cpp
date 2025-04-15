@@ -457,20 +457,20 @@ int main() {
     cout << "Enter number of vertices on side V (n): ";
     cin >> n;*/
     
-    vector<vector<int>> results(29, vector<int>(29,0));
+    vector<vector<int>> results(40, vector<int>(40,0));
     vector<pair<int,int>> n_mqueue;
-    for(int firstcord=3;firstcord<=30;firstcord++){
+    /*for(int firstcord=3;firstcord<=30;firstcord++){
         for (int secondcord = firstcord; secondcord <= 30; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
-    }
-    /*for(int firstcord=30;firstcord<=40;firstcord++){
-        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
+    }*/
+    for(int firstcord=2;firstcord<=30;firstcord++){
+        for (int secondcord = 30; secondcord <= 40; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
-    }*/
+    }
     //n_mqueue.emplace_back(18,28);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
