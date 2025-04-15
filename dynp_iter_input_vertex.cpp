@@ -465,21 +465,27 @@ int main() {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
+    /*for(int firstcord=30;firstcord<=40;firstcord++){
+        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
+        {
+            n_mqueue.emplace_back(firstcord,secondcord);
+        }
+    }*/
     //n_mqueue.emplace_back(18,28);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 1000;  // Number of trials
-        int insideIterations = 5;
+        int iterations = 100;  // Number of trials
+        int insideIterations = 6;
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
 
-        vector<vector<int>> inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
-        //vector<vector<int>> inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
+        //vector<vector<int>> inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
+        vector<vector<int>> inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
 
         ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         for (int iter = 0; iter < iterations; ++iter) {
