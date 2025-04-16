@@ -478,7 +478,7 @@ int main() {
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
         int iterations = 100;  // Number of trials
-        int insideIterations = 6;
+        int insideIterations = 1;
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
@@ -487,22 +487,23 @@ int main() {
         //vector<vector<int>> inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
         vector<vector<int>> inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
 
+        vector<pair<int, int>> edges;
+
+        for (int u = 0; u < m; ++u)
+                for (int v = 0; v < n; ++v)
+                    edges.emplace_back(u, v);
         ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
             
             createStartingGraphFromInput(adj, inputgraph);
-            
-            vector<pair<int, int>> edges;
 
             //dynp dyn_p(n, m, upperBound(2,2,n,m));
             dynp dyn_p(adj, upperBound(2,2,n,m));
             run_with_p(adj, dyn_p, insideIterations, m, n);
 
             // Generate all possible edges
-            for (int u = 0; u < m; ++u)
-                for (int v = 0; v < n; ++v)
-                    edges.emplace_back(u, v);
+            
 
             // Shuffle edge order randomly
             random_shuffle(edges.begin(), edges.end());
@@ -553,11 +554,11 @@ int main() {
     resfile.close();
     print_graph(results);
 
-    auto end = chrono::steady_clock::now();
+    */auto end = chrono::steady_clock::now();
 
     auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     cout << "Execution time: " << duration << " seconds\n";
-
+/*
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
     logfile<<"DYNP_ITER_INPUT_VERTEX_M_QUICK: "<<duration<<"seconds\n";

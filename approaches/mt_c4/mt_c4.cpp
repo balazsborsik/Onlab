@@ -235,19 +235,17 @@ int main() {
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
-        ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
-        for (int iter = 0; iter < iterations; ++iter) {
-            vector<vector<int>> adj(m, vector<int>(n, 0));
-            vector<pair<int, int>> edges;
 
-            ///run_with_p(adj, p, m, n);
-
-            // Generate all possible edges
-            for (int u = 0; u < m; ++u)
+        vector<pair<int, int>> edges;
+        for (int u = 0; u < m; ++u)
                 for (int v = 0; v < n; ++v)
                     edges.emplace_back(u, v);
+        double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
+        for (int iter = 0; iter < iterations; ++iter) {
+            vector<vector<int>> adj(m, vector<int>(n, 0));
 
-            // Shuffle edge order randomly
+            run_with_p(adj, p, m, n);
+
             random_shuffle(edges.begin(), edges.end());
 
             int edgeCount = 0;
@@ -272,11 +270,11 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("RAND_log.txt", std::ios_base::app);
+        logfile.open("MT_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         logfile<<endl;
-        ///logfile<<" p: "<<p<<";"<<endl;
+        logfile<<" p: "<<p<<";"<<endl;
         logfile.close();
 
         stringstream str;
@@ -288,7 +286,7 @@ int main() {
     }
 
     stringstream str;
-    str<<"RAND_results.txt";
+    str<<"MT_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -301,7 +299,7 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"RAND: "<<duration<<"seconds\n";
+    logfile<<"MT: "<<duration<<"seconds\n";
     logfile.close();
 
     return 0;

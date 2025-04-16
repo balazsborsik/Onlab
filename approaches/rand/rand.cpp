@@ -235,19 +235,15 @@ int main() {
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
+        vector<pair<int, int>> edges;
+        for (int u = 0; u < m; ++u)
+            for (int v = 0; v < n; ++v)
+                edges.emplace_back(u, v);
+
         ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
-            vector<pair<int, int>> edges;
 
-            ///run_with_p(adj, p, m, n);
-
-            // Generate all possible edges
-            for (int u = 0; u < m; ++u)
-                for (int v = 0; v < n; ++v)
-                    edges.emplace_back(u, v);
-
-            // Shuffle edge order randomly
             random_shuffle(edges.begin(), edges.end());
 
             int edgeCount = 0;
