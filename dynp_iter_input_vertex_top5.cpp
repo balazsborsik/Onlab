@@ -27,7 +27,7 @@ vector<vector<int>> create_from_file(int m, int n, string filename){
     return graph;
 }
 
-string readBestGraph(int m, int n) {
+vector<string> read5BestGraphs(int m, int n) {
     stringstream filestart;
     filestart << "Z" << m << "_" << n << "_" << 2 << "_" << 2 << "_";
     string prefix = filestart.str();
@@ -37,12 +37,12 @@ string readBestGraph(int m, int n) {
     DIR* dir = opendir("output");
     if (!dir) {
         cerr << "Failed to open 'output' directory." << endl;
-        return "";
+        return;
     }
 
     struct dirent* entry;
     int maxNum = -1;
-    string result;
+    vector<pair<int, string>> filenames;
 
     while ((entry = readdir(dir)) != nullptr) {
         string filename = entry->d_name;
@@ -50,15 +50,23 @@ string readBestGraph(int m, int n) {
         smatch match;
         if (std::regex_match(filename, match, pattern)) {
             int num = std::stoi(match[1]);
-            if (num > maxNum) {
-                maxNum = num;
-                result = "output\\" + filename;
-            }
+            filenames.emplace_back(num, "output\\" + filename);
         }
     }
-
+    sort(filenames.begin(), filenames.end());
     closedir(dir);
-    return result;
+    vector<string> results;
+    int siz=filenames.size();
+    if(siz>=5){
+        for(int i=0;i<5;i++){
+            results.push_back(filenames[siz-1-i].second);
+        }
+    }else{
+        for(int i=0;i<siz;i++){
+            results.push_back(filenames[siz-1-i].second);
+        }
+    }
+    return results;
 }
 
 struct dynp{
@@ -448,6 +456,14 @@ void createStartingGraphFromInput(vector<vector<int>> &adj, const vector<vector<
     else __throw_invalid_argument("az input és az adj gráfok nem megfelelő méretűek");
 }
 
+bool top5contains(int value, const vector<pair<int,vector<vector<int>>>> &top5){
+    for(const auto &elm: top5){
+        if(value==elm.first)
+            return true;
+    }
+    return false;
+}
+
 int main() {
     srand(time(0));
 
@@ -480,60 +496,75 @@ int main() {
         cout<<m<<", "<<n<<endl;
         int iterations = 10;  // Number of trials
         int insideIterations = 3;
-        int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
-        vector<vector<int>> graph(m, vector<int>(n, 0));
-        vector<vector<int>> inputgraph;
-        if(appendToM){
-            inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
-        }else{
-            if(m==n)
-                inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
-            else
-                inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
-        }
-
+        
         vector<pair<int, int>> edges;
 
         for (int u = 0; u < m; ++u)
                 for (int v = 0; v < n; ++v)
                     edges.emplace_back(u, v);
-        ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
-        for (int iter = 0; iter < iterations; ++iter) {
-            vector<vector<int>> adj(m, vector<int>(n, 0));
+        vector<pair<int,vector<vector<int>>>> top5(5, {0, vector<vector<int>>(m, vector<int>(n, 0))});
+        //vector<vector<int>> graph(m, vector<int>(n, 0));
+
+        int input_m;
+        int input_n;
+        
+        if(appendToM || m==n){
+            input_m=m-1;
+            input_n=n;
+        }else{
+            input_m=m;
+            input_n=n-1;
+        }
+        vector<string> filenames=read5BestGraphs(input_m, input_n);
+        for(const auto& inputfilename : filenames){
+            vector<vector<int>> inputgraph=create_from_file(input_m, input_n, inputfilename);
             
-            createStartingGraphFromInput(adj, inputgraph);
+            ///double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
+            for (int iter = 0; iter < iterations; ++iter) {
+                vector<vector<int>> adj(m, vector<int>(n, 0));
+                
+                createStartingGraphFromInput(adj, inputgraph);
 
-            //dynp dyn_p(n, m, upperBound(2,2,n,m));
-            dynp dyn_p(adj, upperBound(2,2,n,m));
-            run_with_p(adj, dyn_p, insideIterations, m, n);
+                //dynp dyn_p(n, m, upperBound(2,2,n,m));
+                dynp dyn_p(adj, upperBound(2,2,n,m));
+                run_with_p(adj, dyn_p, insideIterations, m, n);
 
-            // Generate all possible edges
-            
+                // Generate all possible edges
+                
 
-            // Shuffle edge order randomly
-            random_shuffle(edges.begin(), edges.end());
+                // Shuffle edge order randomly
+                random_shuffle(edges.begin(), edges.end());
 
-            int edgeCount = 0;
+                int edgeCount = 0;
 
-            // Try to add edges one by one, only if they don't create a K_{2,2}
-            for (auto& e : edges) {
-                int u = e.first;
-                int v = e.second;
-                if(adj[u][v]==1){
-                    ++edgeCount;
-                }else if (!createsK22(adj, m, n, u, v)) {
-                    adj[u][v] = 1;
-                    ++edgeCount;
+                // Try to add edges one by one, only if they don't create a K_{2,2}
+                for (auto& e : edges) {
+                    int u = e.first;
+                    int v = e.second;
+                    if(adj[u][v]==1){
+                        ++edgeCount;
+                    }else if (!createsK22(adj, m, n, u, v)) {
+                        adj[u][v] = 1;
+                        ++edgeCount;
+                    }
+                }
+                stats.add(edgeCount);
+                if (edgeCount > top5.back().first && !top5contains(edgeCount, top5)) {
+                    int spot;
+                    for(int i=0;i<5;i++){
+                        if(top5[i].first<edgeCount){
+                            spot=i;
+                            break;
+                        }
+                    }
+                    top5.pop_back();
+                    top5.insert(top5.begin()+spot, {edgeCount, adj});
                 }
             }
-            stats.add(edgeCount);
-            if (edgeCount > maxEdges) {
-                maxEdges = edgeCount;
-                graph=adj;
-            }
         }
+
 
         ofstream logfile;
         logfile.open("DYNP_ITER_INPUT_VERTEX_N_NEW_log.txt", std::ios_base::app);
@@ -545,13 +576,15 @@ int main() {
         logfile.close();
         
         //cout<<maxEdges<<endl;
-
+        for(int i=0;i<5;i++){
         stringstream str;
-        str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<maxEdges<<".txt";
+        str<<"output/"<<"Z"<<m<<"_"<<n<<"_"<<2<<"_"<<2<<"_"<<top5[i].first<<".txt";
         ofstream outfile (str.str());
-        print_graph( graph, outfile);
+        print_graph( top5[i].second, outfile);
         outfile.close();
-        results[n-2][m-2]=maxEdges;
+        
+        }
+        results[n-2][m-2]=top5[0].first;
     }
     
     stringstream str;
