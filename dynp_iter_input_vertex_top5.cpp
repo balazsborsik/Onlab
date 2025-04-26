@@ -37,12 +37,13 @@ vector<string> read5BestGraphs(int m, int n) {
     DIR* dir = opendir("output");
     if (!dir) {
         cerr << "Failed to open 'output' directory." << endl;
-        return;
+        __throw_runtime_error("Failed to open 'output' directory.");
     }
 
     struct dirent* entry;
     int maxNum = -1;
     vector<pair<int, string>> filenames;
+    filenames.emplace_back(0, filestart.str()+"0.txt"); //default value so if no graphs are stored it starts form somewhere
 
     while ((entry = readdir(dir)) != nullptr) {
         string filename = entry->d_name;
@@ -475,7 +476,7 @@ int main() {
     
     vector<vector<int>> results(39, vector<int>(39,0));
     vector<pair<int,int>> n_mqueue;
-    for(int firstcord=3;firstcord<=40;firstcord++){
+    for(int firstcord=2;firstcord<=40;firstcord++){
         for (int secondcord = firstcord; secondcord <= 40; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
@@ -487,7 +488,7 @@ int main() {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }*/
-    bool appendToM=false;
+    bool appendToM=true;
     //n_mqueue.emplace_back(18,28);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
@@ -566,14 +567,14 @@ int main() {
         }
 
 
-        ofstream logfile;
-        logfile.open("DYNP_ITER_INPUT_VERTEX_N_NEW_log.txt", std::ios_base::app);
+       /* ofstream logfile;
+        logfile.open("DYNP_ITER_INPUT_VERTEX_TOP5_2NDM_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         //logfile<<endl;
         ///logfile<<" p: "<<p<<";"<<endl;
         logfile<<" iter: "<<insideIterations<<";"<<endl;
-        logfile.close();
+        logfile.close();*/
         
         //cout<<maxEdges<<endl;
         for(int i=0;i<5;i++){
@@ -588,7 +589,7 @@ int main() {
     }
     
     stringstream str;
-    str<<"DYNP_ITER_INPUT_VERTEX_N_NEW_results.txt";
+    str<<"DYNP_ITER_INPUT_VERTEX_TOP5_N_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -598,10 +599,10 @@ int main() {
 
     auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     cout << "Execution time: " << duration << " seconds\n";
-/*
-    ofstream logfile;
+
+   /* ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"DYNP_ITER_INPUT_VERTEX_M_QUICK: "<<duration<<"seconds\n";
+    logfile<<"DYNP_ITER_INPUT_VERTEX_TOP5_2NDM: "<<duration<<"seconds\n";
     logfile.close();*/
 
     return 0;
