@@ -459,33 +459,40 @@ int main() {
     
     vector<vector<int>> results(40, vector<int>(40,0));
     vector<pair<int,int>> n_mqueue;
-    /*for(int firstcord=3;firstcord<=30;firstcord++){
-        for (int secondcord = firstcord; secondcord <= 30; secondcord++)
-        {
-            n_mqueue.emplace_back(firstcord,secondcord);
-        }
-    }*/
-    for(int firstcord=2;firstcord<=30;firstcord++){
-        for (int secondcord = 30; secondcord <= 40; secondcord++)
+    for(int firstcord=3;firstcord<=40;firstcord++){
+        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
+    /*for(int firstcord=2;firstcord<=30;firstcord++){
+        for (int secondcord = 30; secondcord <= 40; secondcord++)
+        {
+            n_mqueue.emplace_back(firstcord,secondcord);
+        }
+    }*/
+    bool appendToM=false;
     //n_mqueue.emplace_back(18,28);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 100;  // Number of trials
-        int insideIterations = 1;
+        int iterations = 10;  // Number of trials
+        int insideIterations = 3;
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
-
-        //vector<vector<int>> inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
-        vector<vector<int>> inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
+        vector<vector<int>> inputgraph;
+        if(appendToM){
+            inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
+        }else{
+            if(m==n)
+                inputgraph=create_from_file(m-1,n,readBestGraph(m-1,n));
+            else
+                inputgraph=create_from_file(m,n-1,readBestGraph(m,n-1));
+        }
 
         vector<pair<int, int>> edges;
 
@@ -528,15 +535,15 @@ int main() {
             }
         }
 
-        /*ofstream logfile;
-        logfile.open("DYNP_ITER_INPUT_VERTEX_M_QUICK_log.txt", std::ios_base::app);
+        ofstream logfile;
+        logfile.open("DYNP_ITER_INPUT_VERTEX_N_NEW_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         //logfile<<endl;
         ///logfile<<" p: "<<p<<";"<<endl;
         logfile<<" iter: "<<insideIterations<<";"<<endl;
         logfile.close();
-        */
+        
         //cout<<maxEdges<<endl;
 
         stringstream str;
@@ -547,14 +554,14 @@ int main() {
         results[n-2][m-2]=maxEdges;
     }
     
-    /*stringstream str;
-    str<<"DYNP_ITER_INPUT_VERTEX_M_QUICK_results.txt";
+    stringstream str;
+    str<<"DYNP_ITER_INPUT_VERTEX_N_NEW_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
     print_graph(results);
 
-    */auto end = chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
 
     auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     cout << "Execution time: " << duration << " seconds\n";
