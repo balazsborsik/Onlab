@@ -465,38 +465,25 @@ bool top5contains(int value, const vector<pair<int,vector<vector<int>>>> &top5){
     return false;
 }
 
-int main() {
-    srand(time(0));
-
+vector<vector<int>> run_in_range(int min, int max, bool appendToM, int runid){
     int m, n;
-    /*cout << "Enter number of vertices on side U (m): ";
-    cin >> m;
-    cout << "Enter number of vertices on side V (n): ";
-    cin >> n;*/
-    
     vector<vector<int>> results(39, vector<int>(39,0));
     vector<pair<int,int>> n_mqueue;
-    for(int firstcord=2;firstcord<=40;firstcord++){
-        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
+    for(int firstcord=min;firstcord<=max;firstcord++){
+        for (int secondcord = firstcord; secondcord <= max; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
     }
-    /*for(int firstcord=2;firstcord<=30;firstcord++){
-        for (int secondcord = 30; secondcord <= 40; secondcord++)
-        {
-            n_mqueue.emplace_back(firstcord,secondcord);
-        }
-    }*/
-    bool appendToM=true;
+
     //n_mqueue.emplace_back(18,28);
     auto start = chrono::steady_clock::now();
     for(int iters=0;iters<n_mqueue.size();iters++){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
-        cout<<m<<", "<<n<<endl;
-        int iterations = 10;  // Number of trials
-        int insideIterations = 3;
+        //cout<<m<<", "<<n<<endl;
+        int iterations = 40;  // Number of trials
+        int insideIterations[] = {1,3,6,12,24}; // 1, 3, 6, 12,24
         logs stats;
         stats.startTimer();
         
@@ -530,7 +517,7 @@ int main() {
 
                 //dynp dyn_p(n, m, upperBound(2,2,n,m));
                 dynp dyn_p(adj, upperBound(2,2,n,m));
-                run_with_p(adj, dyn_p, insideIterations, m, n);
+                run_with_p(adj, dyn_p, insideIterations[iters%5], m, n);
 
                 // Generate all possible edges
                 
@@ -566,9 +553,13 @@ int main() {
             }
         }
 
-
-       /* ofstream logfile;
-        logfile.open("DYNP_ITER_INPUT_VERTEX_TOP5_2NDM_log.txt", std::ios_base::app);
+        /*stringstream logname;
+        if(appendToM)
+            logname<<"DYNP_ITER_INPUT_VERTEX_TOP5_M"<<runid<<"_log.txt";
+        else
+            logname<<"DYNP_ITER_INPUT_VERTEX_TOP5_N"<<runid<<"_log.txt";
+        ofstream logfile;
+        logfile.open(logname.str(), std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         //logfile<<endl;
@@ -588,8 +579,50 @@ int main() {
         results[n-2][m-2]=top5[0].first;
     }
     
+    /*stringstream str;
+     if(appendToM)
+            str<<"DYNP_ITER_INPUT_VERTEX_TOP5_M"<<runid<<"_result.txt";
+        else
+            str<<"DYNP_ITER_INPUT_VERTEX_TOP5_N"<<runid<<"_results.txt";
+    ofstream resfile (str.str());
+    print_graph( results, resfile);
+    resfile.close();*/
+    //print_graph(results);
+
+    auto end = chrono::steady_clock::now();
+
+    auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
+    //cout << "Execution time: " << duration << " seconds\n";
+
+    /*ofstream logfile;
+    logfile.open("exec_time.txt", std::ios_base::app);
+    if(appendToM)
+        logfile<<"DYNP_ITER_INPUT_VERTEX_TOP5_M"<<runid<<": "<<duration<<"seconds\n";
+    else
+        logfile<<"DYNP_ITER_INPUT_VERTEX_TOP5_N"<<runid<<": "<<duration<<"seconds\n";
+    logfile.close();
+*/
+    return results;
+}
+
+int main() {
+    srand(time(0));
+
+    vector<vector<int>> results(39, vector<int>(39,0));
+    auto start = chrono::steady_clock::now();
+    for(int i=0;i<30;i++){
+        vector<vector<int>> temp=run_in_range(2,40,i%2,i/2+1);
+        for(int j=0;j<results.size();j++){
+            for(int k=0;k<results.size();k++){
+                if(temp[j][k]>results[j][k]){
+                    results[j][k]=temp[j][k];
+                }
+            }
+        }
+    }
+    
     stringstream str;
-    str<<"DYNP_ITER_INPUT_VERTEX_TOP5_N_results.txt";
+    str<<"DYNP_ITER_INPUT_VERTEX_TOP5_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -600,10 +633,10 @@ int main() {
     auto duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     cout << "Execution time: " << duration << " seconds\n";
 
-   /* ofstream logfile;
+    ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"DYNP_ITER_INPUT_VERTEX_TOP5_2NDM: "<<duration<<"seconds\n";
-    logfile.close();*/
+    logfile<<"DYNP_ITER_INPUT_VERTEX_TOP5: "<<duration<<"seconds\n";
+    logfile.close();
 
     return 0;
 }
