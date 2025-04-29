@@ -11,6 +11,7 @@
 #include <chrono>
 #include <regex>
 #include <dirent.h>
+#include <cstdio>
 using namespace std;
 
 vector<string> problematic_filenames;
@@ -81,7 +82,7 @@ void evaluateAllGraphs(string directory, int m, int n) {
         if (std::regex_match(filename, match, pattern)) {
             int num = std::stoi(match[1]);
             if(has_c4(m, n, directory+"\\"+filename))
-                problematic_filenames.emplace_back(filename);
+                problematic_filenames.emplace_back(directory+"\\"+filename);
         }
     }
 }
@@ -94,17 +95,17 @@ bool is_number(const std::string& s)
 }
 
 int main(int argc, char* argv[]) {
-    if (argc !=2 && (argc != 4 || !is_number(argv[2]) || !is_number(argv[3]))) {
-        cerr << "Usage: " << argv[0] << " <directory> [<min size> <max size>]" << endl;
+    if (argc < 3 || argc > 5 || argc == 4 || ( argc == 5 && ( !is_number(argv[3]) || !is_number(argv[4]) ) ) || ((string)argv[2] != "-l" && (string)argv[2] != "-d")) {
+        cerr << "Usage: " << argv[0] << " <directory> <-l (to list) or -d (to delete)> [<min size> <max size>]" <<endl;
         return 1;
     }
     int min = 2;
     int max = 40;
-    if(argc==4){
-        int min = stoi( argv[1] );
-        int max = stoi( argv[2] );
+    if(argc==5){
+        int min = stoi( argv[3] );
+        int max = stoi( argv[4] );
         if (min>max || min<2 || max>50) {
-            cerr << "second parameter can't be greater than third parameter and both parameters must be in the range of: 2-50" << endl;
+            cerr << "third parameter can't be greater than fourth parameter and both parameters must be in the range of: 2-50" << endl;
             return 2;
         }
     }
@@ -117,6 +118,13 @@ int main(int argc, char* argv[]) {
     }
     for(const auto& elm : problematic_filenames){
         cout<< elm << endl;
+        if((string)argv[2]=="-d"){
+            if (std::remove(elm.c_str()) == 0) {
+                std::cout << "File deleted successfully.\n";
+            } else {
+                std::perror("Error deleting file");
+            }
+        }
     }
     if(problematic_filenames.empty())
         cout<< "All the files in the given directory are c4 free";
