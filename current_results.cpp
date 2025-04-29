@@ -50,17 +50,21 @@ bool is_number(const std::string& s)
 }
 
 int main(int argc, char* argv[]){
-    if (argc != 3 || !is_number(argv[1]) || !is_number(argv[2])) {
-        cerr << "Usage: " << argv[0] << " <min size> <max size>" << endl;
+    if (argc !=1 && (argc != 3 || !is_number(argv[1]) || !is_number(argv[2]))) {
+        cerr << "Usage: " << argv[0] << " [<min size> <max size>]" << endl;
         return 1;
     }
-    int min = stoi( argv[1] );
-    int max = stoi( argv[2] );
-    int size = max - min+1;
-    if (min>max || min<2 || max>50) {
-        cerr << "first parameter can't be greater than second parameter and both parameters must be in the range of: 2-50" << endl;
-        return 2;
+    int min = 2;
+    int max = 40;
+    if(argc==3){
+        int min = stoi( argv[1] );
+        int max = stoi( argv[2] );
+        if (min>max || min<2 || max>50) {
+            cerr << "first parameter can't be greater than second parameter and both parameters must be in the range of: 2-50" << endl;
+            return 2;
+        }
     }
+    int size = max - min+1;
     vector<vector<int>> res(size, vector<int>(size, 0));
     for(int i=0;i<size;i++){
         for(int j=i;j<size;j++){

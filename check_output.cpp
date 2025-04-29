@@ -59,16 +59,16 @@ bool has_c4(int m, int n, string filename){
     return false;
 }
 
-void evaluateAllGraphs(int m, int n) {
+void evaluateAllGraphs(string directory, int m, int n) {
     stringstream filestart;
     filestart << "Z" << m << "_" << n << "_" << 2 << "_" << 2 << "_";
     string prefix = filestart.str();
 
     regex pattern(prefix + R"((\d+)\.txt)");
 
-    DIR* dir = opendir("output");
+    DIR* dir = opendir(directory.c_str());
     if (!dir) {
-        cerr << "Failed to open 'output' directory." << endl;
+        cerr << "Failed to open '"+directory+"' directory." << endl;
         __throw_runtime_error("Failed to open 'output' directory.");
     }
 
@@ -80,23 +80,45 @@ void evaluateAllGraphs(int m, int n) {
         smatch match;
         if (std::regex_match(filename, match, pattern)) {
             int num = std::stoi(match[1]);
-            if(has_c4(m, n, "output\\" + filename))
+            if(has_c4(m, n, directory+"\\"+filename))
                 problematic_filenames.emplace_back(filename);
         }
     }
 }
 
+bool is_number(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
 
-int main() {
-    cout<< "alma";
-    for(int i=2;i<=40;i++){
-        for(int j=i;j<=40;j++){
+int main(int argc, char* argv[]) {
+    if (argc !=2 && (argc != 4 || !is_number(argv[2]) || !is_number(argv[3]))) {
+        cerr << "Usage: " << argv[0] << " <directory> [<min size> <max size>]" << endl;
+        return 1;
+    }
+    int min = 2;
+    int max = 40;
+    if(argc==4){
+        int min = stoi( argv[1] );
+        int max = stoi( argv[2] );
+        if (min>max || min<2 || max>50) {
+            cerr << "second parameter can't be greater than third parameter and both parameters must be in the range of: 2-50" << endl;
+            return 2;
+        }
+    }
+    string dir = argv[1];
+    for(int i=min;i<=max;i++){
+        for(int j=i;j<=max;j++){
             cout<< i<<", "<<j<<endl;
-            evaluateAllGraphs(i, j);
+            evaluateAllGraphs(dir ,i, j);
         }
     }
     for(const auto& elm : problematic_filenames){
         cout<< elm << endl;
     }
+    if(problematic_filenames.empty())
+        cout<< "All the files in the given directory are c4 free";
     return 0;
 }
