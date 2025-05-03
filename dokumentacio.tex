@@ -1,0 +1,87 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[magyar]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{amssymb}
+\usepackage{amsmath}
+ \geometry{ a4paper, textwidth=180mm, textheight=257mm, left=15mm, top=20mm, bottom=25mm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\chead{\includegraphics[height=15mm]{bme_logo_kicsi}}
+\setlength{\headsep}{50pt}
+\geometry{bottom=30mm}
+\fancyfoot[C]{\footnotesize\sl
+\begin{tabular}{r|l} 
+Budapesti Műszaki és Gazdaságtudományi Egyetem & 1117 Budapest, Magyar tudósok körútja 2. I.B.132.\\
+Villamosmérnöki és Informatikai Kar & Telefon: 463-2585, Fax: 463-3157\\
+Számítástudományi és Információelméleti Tanszék & http:\textbackslash\textbackslash www.cs.bme.hu\\
+\end{tabular}}
+\renewcommand{\headrulewidth}{0.4pt}\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document} \ \
+\vspace{2mm}
+\begin{center}
+{\Large\sc
+Önálló Labor\\[5mm]
+\bf 
+Random konstrukciók programozása a Zarankiewicz problémához
+\\[10mm]
+{\Large
+Borsik Balázs
+}\\[10mm]
+Témavezető: Dr.Héger Tamás
+}
+\end{center}
+\vspace{1cm}
+
+\section*{1. Alapfogalmak}
+\textbf{Páros gráf:} (Szükséges-e? – Nem biztos.)\\[2mm]
+\textbf{Zarankiewicz-szám:} Egy $G = (A,B;E)$ páros gráf $K_{s,t}$-mentes, ha nem tartalmaz olyan $s$ csúcsot $A$-ban és $t$ csúcsot $B$-ben, amelyek egy $K_{s,t}$-vel izomorf részgráfot alkotnak. Az $(m,n)$ méretű $K_{s,t}$-mentes páros gráf éleinek maximális számát $Z_{s,t}(m,n)$-nel jelöljük, és Zarankiewicz-számnak nevezzük.\\[2mm]
+\textbf{Zarankiewicz-probléma (eredeti megfogalmazás):} Vegyünk egy $n \times m$-es mátrixot, amely csak 0 és 1 értékeket tartalmaz. Legkevesebb hány darab 1-es szükséges, hogy mindenképp tartalmazzon $s \times t$-es csupa 1-es részmátrixot? Ez a definíció megegyezik $Z_{s,t}(m,n) + 1$-gyel.
+
+\section*{2. Bemutatás}
+Mint látható, a Zarankiewicz probléma egy extremális gráfelméleti probléma. A problémára több képlet is ad értelmezhet felső becsléseket, de ezek a becslések általában a paraméterek nagyságának vagy aszimmetriájának növelésével jelentősen eltérhetnek a pontos értékektől.\\
+
+Alsó becslésekre kevesebb képlet található; ezekben az esetekben különféle konstrukciók (pl. projektív síkok, affin síkok), vagy kimerítő keresések adhatnak jobb közelítő értéket.\\
+
+Az önálló labor során a random konstrukciókkal kapott alsó becslések vizsgálata és programozása történt.
+
+\section*{3. Felső becslések bemutatása}
+A felső becslésekhez alkalmazható például a \textbf{Jensen-egyenlőtlenség}, amely az alábbi módon fogalmazható meg:
+
+\[
+\phi\left( \frac{1}{n} \sum_{i=1}^{n} x_i \right) \leq \frac{1}{n} \sum_{i=1}^{n} \phi(x_i),
+\]
+
+ha $\phi$ konvex függvény. Ez az egyenlőtlenség segít az egyes Zarankiewicz-számokra adott becslések levezetésében.
+\\[2mm]
+A projekt során is használt felső becslés pedig \textbf{Roman becslése} volt, ami a Jensen-egyenlőtlenségből kapott paraméterezett változatt, így sokkal kényelmesebben használható. A program során ez a becslés adta az élvalószínűségek alapját.
+\\[2mm]
+\textbf{Roman-egyenlőtlenség:} Legyen $I \subset \mathbb{R}$ egy intervallum, $f : I \to \mathbb{R}$ egy szigorúan növekvő konvex vagy szigorúan csökkenő konkáv függvény, $n \in \mathbb{N}$, $x_1, \dots, x_n, p, p+1 \in I \cap \mathbb{Z}$. Ekkor
+\[
+\sum_{i=1}^{n} x_i \leq \frac{\sum_{i=1}^{n} f(x_i)}{f(p+1) - f(p)} + n \cdot \frac{p f(p+1) - (p+1) f(p)}{f(p+1) - f(p)}.
+\]
+\\[2mm]
+Az egyenlőség pontosan akkor áll fenn, ha $x_i \in \{p, p+1\}$ minden $1 \leq i \leq n$ esetén, vagy ha $\{x_1, \dots, x_n, p, p+1\} \subset I'$ egy olyan intervallumban, amelyen $f$ lineáris.
+\\[2mm]
+\textbf{Roman-féle felső korlát:} Legyen $G = (A, B; E)$ egy $K_{s,t}$-mentes páros gráf, ahol $|A| = m$, $|B| = n$, és $p \geq s - 1$. Ekkor $G$ éleinek számára teljesül:
+\[
+e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s - 1)}{s}.
+\]
+\\[2mm]
+\vspace{1cm}\vfill
+Budapest, \today
+\begin{flushright}
+\begin{minipage}{0.5\textwidth}
+\begin{center}
+	dr. Katona Gyula\\
+	\textit{egyetemi docens}\\
+	\textit{tanszékvezető}
+\end{center}
+\end{minipage}
+\end{flushright}
+\vfill
+\end{document}
