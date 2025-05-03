@@ -103,7 +103,7 @@ struct dynp{
         expected_n_percent=(double)upper_bound/(n*m);
         edgenum_n.assign(n,0);
         edgenum_m.assign(m,0);
-        offsets=generateNormalDoubles(40*40);
+        offsets=generateNormalDoubles(40*40, 0.0, 0.01, -0.02, 0.02);
     }
 
     dynp(const vector<vector<int>> &graph, int upper_bound)
@@ -123,7 +123,7 @@ struct dynp{
                 }
             }
         }
-        offsets=generateNormalDoubles(40*40);
+        offsets=generateNormalDoubles(40*40, 0.0, 0.01, -0.02, 0.02);
     }
 
     double get_multiplier(int v_m){
