@@ -6,6 +6,8 @@
 \usepackage{geometry}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
  \geometry{ a4paper, textwidth=180mm, textheight=257mm, left=15mm, top=20mm, bottom=25mm}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -72,6 +74,44 @@ Az egyenlőség pontosan akkor áll fenn, ha $x_i \in \{p, p+1\}$ minden $1 \leq
 e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s - 1)}{s}.
 \]
 \\[2mm]
+
+\begin{algorithm}
+\caption{Moser Tardos pszeudokódja}
+\begin{algorithmic}[1]
+
+\Function{\textproc{BecsültMaxÉlek}}{$m$, $n$, $\text{ismétlések}$}
+    \State $\text{maxélek} \gets 0$
+    \State $\text{élek} \gets$ minden lehetséges él $m$ és $n$ között
+    \State $p \gets$ felső becslés alapján számolt valószínűség
+
+    \For{$i = 1$ \textbf{tól} $\text{ismétlések}$}
+        \State gráf inicializálása üres $m \times n$ mátrixként
+        \State véletlenszerű élek beszúrása $p$ valószínűséggel
+
+        \While{van benne $K_{2,2}$}
+            \State távolítsuk el azt az $\text{élt}$, amit a legtöbb $K_{2,2}$ tartalmaz
+        \EndWhile
+
+        \State véletlenszerűen keverjük az éleket
+
+        \For{minden él}
+            \If{nem hoz létre $K_{2,2}$-t}
+                \State adjuk hozzá a gráfhoz
+            \EndIf
+        \EndFor
+
+        \If{aktuális gráf él száma $>$ $\text{maxélek}$}
+            \State $\text{maxélek} \gets$ új érték
+        \EndIf
+    \EndFor
+
+    \State \Return $\text{maxélek}$
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
+
+
 \vspace{1cm}\vfill
 Budapest, \today
 \begin{flushright}
