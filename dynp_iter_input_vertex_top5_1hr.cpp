@@ -123,7 +123,7 @@ struct dynp{
                 }
             }
         }
-        offsets=generateNormalDoubles(40*40, 0.0, 0.01, -0.05, 0.05); // mean-t randomolni mondj 0.05 között
+        offsets=generateNormalDoubles(40*40, ((double)rand()/(double)RAND_MAX)*0.1-0.05, 0.01, -0.07, 0.07); // mean-t randomolni mondj 0.05 között
     }
 
     double get_multiplier(int v_m){

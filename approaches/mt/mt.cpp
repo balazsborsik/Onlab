@@ -40,7 +40,7 @@ struct commmon_neighbours{
         int a = min(a_,b_);
         int b = max(a_,b_);
         if(a>siz-1){
-            throw invalid_argument("in add_cmn(int a_, int b_), int a = min(a_,b_)>siz-1");
+            throw invalid_argument("in remove_cmn(int a_, int b_), int a = min(a_,b_)>siz-1");
         }
         neighbours[a][b]--;
     }
