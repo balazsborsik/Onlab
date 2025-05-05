@@ -123,7 +123,7 @@ struct dynp{
                 }
             }
         }
-        offsets=generateNormalDoubles(40*40, ((double)rand()/(double)RAND_MAX)*0.1-0.05, 0.01, -0.07, 0.07); // mean-t randomolni mondj 0.05 között
+        offsets=generateNormalDoubles(40*40, ((double)rand()/(double)RAND_MAX)*0.1-0.05, 0.05, -0.03, 0.07); // mean-t randomolni mondj 0.05 között
     }
 
     double get_multiplier(int v_m){
@@ -503,7 +503,7 @@ vector<vector<int>> run_in_range(int min, int max, bool appendToM, int runid){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         //cout<<m<<", "<<n<<endl;
-        int iterations = 24;  // Number of trials
+        int iterations = 40;  // Number of trials
         int insideIterations[] = {1,3,6,12}; // 1, 3, 6, 12,24
         logs stats;
         stats.startTimer();

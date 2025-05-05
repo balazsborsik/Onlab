@@ -71,8 +71,8 @@ vector<string> read5BestGraphs(int m, int n) {
 }
 
 struct dynp{
-    vector<int> edgenum_m;
-    vector<int> edgenum_n;
+    vector<int> degree_m;
+    vector<int> degree_n;
     int expected_m;
     int expected_n;
     double expected_n_percent;
@@ -82,8 +82,8 @@ struct dynp{
         expected_m=((double)upper_bound/m+0.5);
         expected_n=((double)upper_bound/n+0.5);
         expected_n_percent=(double)upper_bound/(n*m);
-        edgenum_n.assign(n,0);
-        edgenum_m.assign(m,0);
+        degree_n.assign(n,0);
+        degree_m.assign(m,0);
     }
 
     dynp(const vector<vector<int>> &graph, int upper_bound)
@@ -93,40 +93,40 @@ struct dynp{
         expected_m=((double)upper_bound/m+0.5);
         expected_n=((double)upper_bound/n+0.5);
         expected_n_percent=(double)upper_bound/(n*m);
-        edgenum_n.assign(n,0);
-        edgenum_m.assign(m,0);
+        degree_n.assign(n,0);
+        degree_m.assign(m,0);
         for(int i=0;i<m;i++){
             for(int j=0;j<n;j++){
                 if(graph[i][j]){
-                    edgenum_m[i]++;
-                    edgenum_n[j]++;
+                    degree_m[i]++;
+                    degree_n[j]++;
                 }
             }
         }
     }
 
     double get_multiplier(int v_m){
-        if(edgenum_m[v_m]>=expected_m){
-            if(edgenum_m[v_m]==expected_m)
+        if(degree_m[v_m]>=expected_m){
+            if(degree_m[v_m]==expected_m)
                 return 0.9;
             return 0.5;
         }
-        return 6.7-5.6*((double)edgenum_m[v_m]/expected_m);
+        return 6.7-5.6*((double)degree_m[v_m]/expected_m);
     }
 
     double get_p(int v_m, int v_n){
-        int n=edgenum_n[v_n];
+        int n=degree_n[v_n];
         return min(get_multiplier(v_m)*(expected_n_percent*1.1-(n/expected_n)*expected_n_percent),0.8);
     }
 
     void delete_edge(int v_m, int v_n){
-        edgenum_m[v_m]--;
-        edgenum_n[v_n]--;
+        degree_m[v_m]--;
+        degree_n[v_n]--;
     }
 
     void add_edge(int v_m, int v_n){
-        edgenum_m[v_m]++;
-        edgenum_n[v_n]++;
+        degree_m[v_m]++;
+        degree_n[v_n]++;
     }
 
 };
