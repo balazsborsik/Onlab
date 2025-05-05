@@ -8,6 +8,7 @@
 \usepackage{amsmath}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{minted} 
  \geometry{ a4paper, textwidth=180mm, textheight=257mm, left=15mm, top=20mm, bottom=25mm}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -43,13 +44,12 @@ Témavezető: Dr.Héger Tamás
 \textbf{Páros gráf:} (Szükséges-e? – Nem biztos.)\\[2mm]
 \textbf{Zarankiewicz-szám:} Egy $G = (A,B;E)$ páros gráf $K_{s,t}$-mentes, ha nem tartalmaz olyan $s$ csúcsot $A$-ban és $t$ csúcsot $B$-ben, amelyek egy $K_{s,t}$-vel izomorf részgráfot alkotnak. Az $(m,n)$ méretű $K_{s,t}$-mentes páros gráf éleinek maximális számát $Z_{s,t}(m,n)$-nel jelöljük, és Zarankiewicz-számnak nevezzük.\\[2mm]
 \textbf{Zarankiewicz-probléma (eredeti megfogalmazás):} Vegyünk egy $n \times m$-es mátrixot, amely csak 0 és 1 értékeket tartalmaz. Legkevesebb hány darab 1-es szükséges, hogy mindenképp tartalmazzon $s \times t$-es csupa 1-es részmátrixot? Ez a definíció megegyezik $Z_{s,t}(m,n) + 1$-gyel.
-
 \section*{2. Bemutatás}
-Mint látható, a Zarankiewicz probléma egy extremális gráfelméleti probléma. A problémára több képlet is ad értelmezhet felső becsléseket, de ezek a becslések általában a paraméterek nagyságának vagy aszimmetriájának növelésével jelentősen eltérhetnek a pontos értékektől.\\
+Mint látható, a Zarankiewicz probléma egy extremális gráfelméleti probléma. A problémára több képlet is ad értelmezhető felső becsléseket, de ezek a becslések általában a paraméterek nagyságának vagy aszimmetriájának növelésével jelentősen eltérhetnek a pontos értékektől.\\
 
 Alsó becslésekre kevesebb képlet található; ezekben az esetekben különféle konstrukciók (pl. projektív síkok, affin síkok), vagy kimerítő keresések adhatnak jobb közelítő értéket.\\
 
-Az önálló labor során a random konstrukciókkal kapott alsó becslések vizsgálata és programozása történt.
+Az önálló labor célja a random konstrukciókkal kapott alsó becslések vizsgálata és programozása volt.
 
 \section*{3. Felső becslések bemutatása}
 A felső becslésekhez alkalmazható például a \textbf{Jensen-egyenlőtlenség}, amely az alábbi módon fogalmazható meg:
@@ -73,18 +73,58 @@ Az egyenlőség pontosan akkor áll fenn, ha $x_i \in \{p, p+1\}$ minden $1 \leq
 \[
 e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s - 1)}{s}.
 \]
-\\[2mm]
 
-\begin{algorithm}
+\section*{4. Programozás, módszerek}
+
+\textbf{Program alapja:} A program minden változata \texttt{C++} nyelven készült. A gráfokat szomszédossági mátrixban tároljuk, mivel a vizsgált intervallumban a használt algoritmusokkal ez a módszer gyorsabbnak bizonyult az éllistás tárolásnál.
+
+
+\subsection*{C\textsubscript{4}-ek algoritmusai}
+
+\begin{itemize}
+    \item \textbf{Triviális módszer:} Véletlenszerű sorrendben húzunk be éleket. Ha egy él behúzása $C_4$-et hozna létre, akkor azt az élt nem húzzuk be.
+    
+    \item \textbf{Első irány – Moser–Tardos módszer:} 
+    
+    \textbf{Tétel (LLL egy változata):} Legyenek $E_1, \dots, E_n$ események egy valószínűségi térben, $G$ legyen egy függetlenségi gráf, $d \geq 1$, és teljesüljön:
+    \begin{itemize}
+        \item $\mathbb{P}(E_i) \leq p$ minden $i$-re,
+        \item $G$-ben a csúcsok foka legfeljebb $d$,
+        \item $4dp \leq 1$.
+    \end{itemize}
+    Ekkor $\mathbb{P}\left( \bigcap_{i=1}^n \overline{E_i} \right) > 0$.
+    \\[2mm]
+    \textbf{Moser-Tardos algoritmus:}
+    \begin{enumerate}
+        \item Kiértékeljük a $\xi \in \mathcal{P}$ változókat egy véletlen $\omega \in \Omega$ helyen. Ha egyik $E_i$ sem következik be, akkor $\omega$ egy elemi esemény a $\bigcap_{i=1}^n \overline{E_i}$ metszetből, és az eljárás véget ér.
+        \item Ha valamelyik $E_j$ bekövetkezett, akkor újra kiértékeljük a $P_j$-beli $\xi$ változókat a saját eloszlásuk szerint, függetlenül. A $P \setminus P_j$ változókat változatlanul hagyjuk. Ezután ismét ellenőrizzük, hogy bekövetkezik-e valamelyik $E_i$, és szükség esetén ismételjük a 2. lépést.
+    \end{enumerate}
+
+    \textit{Megjegyzés:} Moser és Tardos bizonyították, hogy a 2. lépést várhatóan legfeljebb $\frac{n}{d-1}$ alkalommal kell elvégezni.
+
+    \textbf{Programváltozatok:}
+    \begin{enumerate}
+        \item $E_i$ esemény: Egy csúcsosztályban két csúcsnak van két közös szomszédja.
+        \item $E_i$ esemény: $C_4$ képződik.
+    \end{enumerate}
+
+    A $p$ (élbehúzási valószínűség) értéke kezdetben az LLL alapján lett megválasztva. Később, mivel $p$ növelése jobb eredményeket adott hasonló futásidő mellett, ezért a prezentált eredményekben:
+    \begin{itemize}
+        \item Az 1. esetben $p$ a Roman-féle felső becslés szerinti várható érték 80\%-a.
+        \item A 2. esetben 85\%-a.
+    \end{itemize}
+\end{itemize}
+
+\begin{algorithm}[H]
 \caption{Moser Tardos pszeudokódja}
 \begin{algorithmic}[1]
 
-\Function{\textproc{BecsültMaxÉlek}}{$m$, $n$, $\text{ismétlések}$}
+\Function{\textproc{BecsültMaxÉlek}}{$m$, $n$, $\text{iterációk}$}
     \State $\text{maxélek} \gets 0$
     \State $\text{élek} \gets$ minden lehetséges él $m$ és $n$ között
     \State $p \gets$ felső becslés alapján számolt valószínűség
 
-    \For{$i = 1$ \textbf{tól} $\text{ismétlések}$}
+    \For{$i = 1$ \textbf{tól} $\text{iterációk}$}
         \State gráf inicializálása üres $m \times n$ mátrixként
         \State véletlenszerű élek beszúrása $p$ valószínűséggel
 
@@ -111,6 +151,74 @@ e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s 
 \end{algorithmic}
 \end{algorithm}
 
+
+\subsection*{Második irány – Dinamikusan karbantartott valószínűségek}
+
+A következő fejlesztés az élbehúzási valószínűségek futás közbeni módosítása volt. A cél az volt, hogy a csúcsosztályok fokszámai a Roman-féle felső becslés várható értékei felé konvergáljanak. Kísérletezés után a legjobb alsó korlátokat az alábbi módszer adta, a valószínűségek számítása az alábbi képlet alapján történt:
+
+\begin{algorithm}[H]
+\caption{élbehúzási valószínűségek kódrészlet}
+\begin{minted}{c++} 
+    int expected_m = ((double)upper_bound / m+0.5); // m osztályú csúcs várható értéke
+    int expected_n = ((double)upper_bound / n+0.5); // n osztályú csúcs várható értéke
+    double expected_n_percent = (double)upper_bound / (n * m);
+    
+    double get_multiplier(int v_m){
+        if(degree_m[v_m] >= expected_m){
+            if(degree_m[v_m] == expected_m)
+                return 0.9;
+            return 0.5;
+        }
+        return 6.7 - 5.6 * ((double)degree_m[v_m] / expected_m);
+    }
+
+    double get_p(int v_m, int v_n){
+        int n = degree_n[v_n];
+        return min(get_multiplier(v_m) * (expected_n_percent * 1.1
+               - (n/expected_n) * expected_n_percent), 0.8);
+    }
+\end{minted}    
+\end{algorithm}
+
+\textbf{További két módszer:}
+\begin{enumerate}
+    \item Csak a nagyobb csúcsosztály fokszámainak figyelembevétele.
+    \item Iterációk előtt a valószínűségek fixálása úgy, hogy a behúzott élek várható száma a felső becslés adott százaléka legyen.
+\end{enumerate}
+
+\subsection*{Harmadik fejlesztés – Több iteráció futtatása}
+\begin{algorithm}
+\begin{algorithmic}[1]
+    \State ...
+    \For{belső iterációszám}
+        \State véletlenszerű élek beszúrása $p$ valószínűséggel
+        \While{van benne $K_{2,2}$}
+            \State távolítsuk el azt az $\text{élt}$, amit a legtöbb $K_{2,2}$ tartalmaz
+        \EndWhile
+    \EndFor
+    \State ...
+\end{algorithmic}
+\end{algorithm}
+
+
+Több belső iteráció futtatása egy programfutás alatt javította az alsó becsléseket.
+
+\subsection*{Negyedik irány – Korábban talált gráfok újrafelhasználása}
+
+\textbf{Ötlet:} Amikor $Z(n,m)$-et számolunk, induljunk a korábban megtalált $Z(n-1, m)$ gráfból. Adjunk hozzá egy új csúcsot az $n$ csúcsosztályhoz, majd próbáljunk minél több élt behúzni ebből a csúcsból a másik osztályba anélkül, hogy $C_4$-et hoznánk létre.
+
+\textbf{Két változat:}
+\begin{enumerate}
+    \item A fenti módszer közvetlen megvalósítása.
+    \item A legjobb 5 gráf mentése és újraindítása a fenti stratégiával.
+\end{enumerate}
+
+\subsection*{Végső táblázat, értékelés}
+
+A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz(majd felette mindenhol pontos iterációszám és paraméterek). A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan, a minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
+Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb eredményeket produkált, azokban az esetekben, ahol a gráf optimális fokszámai erősen aszimmetrikusak.
+
+\textbf{Módosított logika:} Minden élhez futtatás előtt random eltérítési értéket generálunk, amely pozitív vagy negatív irányba módosítja az élbehúzási valószínűséget. Ez növeli az esélyt az aszimmetrikus, de optimális struktúrák megtalálására.
 
 \vspace{1cm}\vfill
 Budapest, \today
