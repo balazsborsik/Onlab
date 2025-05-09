@@ -215,10 +215,142 @@ Több belső iteráció futtatása egy programfutás alatt javította az alsó b
 
 \subsection*{Végső táblázat, értékelés}
 
-A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz(majd felette mindenhol pontos iterációszám és paraméterek). A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan, a minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
+A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz(majd felette mindenhol pontos iterációszám és paraméterek). A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan.A minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
 Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb eredményeket produkált, azokban az esetekben, ahol a gráf optimális fokszámai erősen aszimmetrikusak.
 
 \textbf{Módosított logika:} Minden élhez futtatás előtt random eltérítési értéket generálunk, amely pozitív vagy negatív irányba módosítja az élbehúzási valószínűséget. Ez növeli az esélyt az aszimmetrikus, de optimális struktúrák megtalálására.
+
+\section*{Fogalmak}
+
+\begin{itemize}
+    \item $K_{n,m}$: Egy $(N,M,E)$ teljes páros gráf, ahol $|N|=n$, $|M|=m$ és bármely $u \in N$ és $v \in M$ között van él behúzva.
+    \item $C_4$: $K_{2,2}$
+    \item Egy gráf \textbf{triviálisan kiegészíthető}, ha létezik olyan még nem behúzott él, melynek behúzása után nem keletkezik $C_4$.
+\end{itemize}
+
+\section*{Programváltozatok}
+
+\subsection*{1. Mohó algoritmus}
+\textbf{Algoritmus:} Módszer random sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
+
+\textbf{Motiváció:} Az éleket csak sorban vizsgálva a gráf nagyon aszimmetrikus lenne, például az elsőnek vizsgált csúcs össze lenne kötve az egész másik csúcsosztállyal, és mivel a felső becslések is minél egyenletesebb fokszámeloszlást vesznek alapul, a projektív síkok, és abból képzett konstrukciók is ilyenek, ezért az élek random sorrendje lehetővé teszi egy átlagosan sokkal kiegyensúlyozottabb gráf előállítását, miközben a gráf továbbra is triviálisan nem kiegészíthető marad.
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{2. Moser-Tardos}
+
+\textbf{Algoritmus:} Végig megyünk az éleken, és minden élt az LLL-ből kiszámolt valószínűséggel behúzunk, közben számon tartjuk a kisebbik/nagyobbik (még nem eldöntött, meg kell nézni mindkettőt!) csúcsosztályban az összes csúcspár közös szomszédjainak számát. Ha egy $(u,v)$ él behúzásra kerül, akkor az összes olyan $(u,u')$ csúcspár közös szomszédjainak számát növeljük eggyel, ahol $u'$ szomszédos $v$-vel. Ezután végigmegyünk minden csúcspáron, és ha a közös szomszédaik száma $\geq 2$, akkor újrasorsoljuk a csúcspár összes élét. Ezt addig ismételgetjük, amíg van olyan csúcspár, ahol a közös szomszédok száma $\geq 2$. (Triviális javítás a mohó algoritmus használata a folyamat vége után, ennek eredményeiről lentebb.)
+
+\textbf{Motiváció:} A Moser-Tardos módszer jól ráillik a problémára és az újrasorsolások által pont két csúcs közös szomszédjait javítja ki, és ahol a gráf már $C_4$-mentes, azt kevésbé változtatja meg. Ezért ez a célzott javítgatás jobb eredményekre ad reményt.
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{3. Moser-Tardos javítása}
+
+\textbf{Algoritmus:} Végig megyünk az éleken, és minden élt az LLL-ből kiszámolt valószínűséggel behúzunk, közben számon tartjuk a keletkezett $C_4$-eket. Ezután végigmegyünk minden $C_4$-en és újrasorsoljuk az összes élét. Ezt addig ismételgetjük, amíg van $C_4$. (Triviális javítás a mohó algoritmus használata a folyamat vége után.)
+
+\textbf{Motiváció:} A Moser-Tardos módszer jól ráillik a problémára és az újrasorsolások által pont $C_4$-eket javítja ki, és ahol a gráf már $C_4$-mentes, azt kevésbé változtatja meg. Ezért ez a célzott javítgatás jobb eredményekre ad reményt.
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+\subsection*{4. Moser-Tardos további javítása}
+
+\textbf{Algoritmus:} Ugyanaz, mint a javított verziónál, csak számon tartjuk, hogy melyik él hány különböző $C_4$-ben szerepel, és azt az élt töröljük, ami a legtöbb $C_4$-ben szerepel, majd ezt a törlést iteráljuk, amíg van $C_4$.
+
+\textbf{Motiváció:} A fenti javított változatban igazából az újrasorsolás miatt lehet, hogy egy $C_4$ összes élét kitöröljük, mikor lehet, hogy csak 1 élt kéne kitörölni ahhoz, hogy a gráf $C_4$-mentes legyen. Ez a javítás ezt a problémát megoldja, és mivel mindig a leggyakoribb élt töröljük, ezért ezt a törlést nem kell olyan sokszor megcsinálni. Továbbá valószínűleg a gráf sűrűbb részéről törlünk ki éleket.
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{5. Eredmények Moser-Tardos módszerekkel megnövelt valószínűséggel egy táblázatban:}
+
+\textbf{Eredmények:} 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Z(n,m)} & \textbf{Mohó} & \textbf{MT - mohó} & \textbf{MT} & \textbf{MT + jav.} & \textbf{MT + C4 jav.} & \textbf{MT + C4 jav. törlés} \\
+\hline
+$Z(20,20)$ & 90 & 90 & 90 & 90 & 90 & 90 \\
+$Z(30,30)$ & 150 & 150 & 150 & 150 & 150 & 150 \\
+$Z(40,40)$ & 200 & 200 & 200 & 200 & 200 & 200 \\
+$Z(14,29)$ & 85 & 85 & 85 & 85 & 85 & 85 \\
+$Z(9,30)$  & 75 & 75 & 75 & 75 & 75 & 75 \\
+$Z(20,37)$ & 116 & 116 & 116 & 116 & 116 & 116 \\
+\hline
+Él \% & 50\% & 50\% & 50\% & 50\% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\caption{Különböző algoritmusok $Z(n,m)$ értékeinek összehasonlítása}
+\end{table}
+
 
 \vspace{1cm}\vfill
 Budapest, \today
