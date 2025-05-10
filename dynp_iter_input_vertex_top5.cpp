@@ -482,7 +482,7 @@ vector<vector<int>> run_in_range(int min, int max, bool appendToM, int runid){
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         //cout<<m<<", "<<n<<endl;
-        int iterations = 60;  // Number of trials
+        int iterations = 80;  // Number of trials
         int insideIterations[] = {1,3,6,12,24}; // 1, 3, 6, 12,24
         logs stats;
         stats.startTimer();

@@ -217,10 +217,10 @@ int main() {
     cout << "Enter number of vertices on side V (n): ";
     cin >> n;*/
     
-    vector<vector<int>> results(29, vector<int>(29,0));
+    vector<vector<int>> results(39, vector<int>(39,0));
     vector<pair<int,int>> n_mqueue;
-    for(int firstcord=2;firstcord<=30;firstcord++){
-        for (int secondcord = firstcord; secondcord <= 30; secondcord++)
+    for(int firstcord=2;firstcord<=40;firstcord++){
+        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
@@ -230,7 +230,7 @@ int main() {
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 50000;  // Number of trials
+        int iterations = 18000;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();

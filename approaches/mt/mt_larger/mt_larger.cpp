@@ -161,57 +161,57 @@ bool createsK22(const vector<vector<int>>& adj, int m, int n, int u, int v) {
 // Function to check if adding edge (u, v) creates a K_{2,2}
 void storeCMN(commmon_neighbours& cmn, const vector<vector<int>>& adj, int m, int n, int u, int v) {// Its important, that adj[u][i]==0, when calling storeCMN
     // Check for another vertex u2 that shares neighbor v
-    for (int u2 = 0; u2 < m; ++u2) {
+    for (int v2 = 0; v2 < n; ++v2) {
         //if (u2 == u) continue;
-        if (adj[u2][v]) {
-            cmn.add_cmn(u,u2);
+        if (adj[u][v2]) {
+            cmn.add_cmn(v,v2);
         }
     }
 }
 
 void removeFromCMN(commmon_neighbours& cmn, const vector<vector<int>>& adj, int m, int n, int u, int v) {// Its important, that adj[u][i]==0, when calling removeCMN
     // Check for another vertex u2 that shares neighbor v
-    for (int u2 = 0; u2 < m; ++u2) {
+    for (int v2 = 0; v2 < n; ++v2) {
         //if (u2 == u) continue;
-        if (adj[u2][v]) {
-            cmn.remove_cmn(u,u2);
+        if (adj[u][v2]) {
+            cmn.remove_cmn(v,v2);
         }
     }
 }
 
 void reflip_pair(commmon_neighbours& cmn, const pair<int, int>& pair, vector<vector<int>> &adj, double p, int m, int n){
-    int u=pair.first;
-    for(int i=0;i<n;i++){
+    int v=pair.first;
+    for(int i=0;i<m;i++){
         if(p>((double)rand()/(double)RAND_MAX)){
-            if(!adj[u][i]){
-                storeCMN(cmn,adj,m,n,u,i);  // Its important, that adj[u][i]==0, when calling storeCMN
-                adj[u][i]=1;
+            if(!adj[i][v]){
+                storeCMN(cmn,adj,m,n,i,v);  // Its important, that adj[u][i]==0, when calling storeCMN
+                adj[i][v]=1;
             }
         }else{
-            if(adj[u][i]){
-                adj[u][i]=0;
-                removeFromCMN(cmn,adj,m,n,u,i); // Its important, that adj[u][i]==0, when calling removeCMN
+            if(adj[i][v]){
+                adj[i][v]=0;
+                removeFromCMN(cmn,adj,m,n,i,v); // Its important, that adj[u][i]==0, when calling removeCMN
             }
         }
     }
-    u=pair.second;
-    for(int i=0;i<n;i++){
+    v=pair.second;
+    for(int i=0;i<m;i++){
         if(p>((double)rand()/(double)RAND_MAX)){
-            if(!adj[u][i]){
-                storeCMN(cmn,adj,m,n,u,i);  // Its important, that adj[u][i]==0, when calling storeCMN
-                adj[u][i]=1;
+            if(!adj[i][v]){
+                storeCMN(cmn,adj,m,n,i,v);  // Its important, that adj[u][i]==0, when calling storeCMN
+                adj[i][v]=1;
             }
         }else{
-            if(adj[u][i]){
-                adj[u][i]=0;
-                removeFromCMN(cmn,adj,m,n,u,i); // Its important, that adj[u][i]==0, when calling removeCMN
+            if(adj[i][v]){
+                adj[i][v]=0;
+                removeFromCMN(cmn,adj,m,n,i,v); // Its important, that adj[u][i]==0, when calling removeCMN
             }
         }
     }
 }
 
 void run_with_p(vector<vector<int>>& adj, double p, int m, int n){
-    commmon_neighbours cmn(m);
+    commmon_neighbours cmn(n);
     for (int u = 0; u < m; ++u){
         for (int v = 0; v < n; ++v){
             if(p>((double)rand()/(double)RAND_MAX)){
@@ -253,10 +253,10 @@ int main() {
     cout << "Enter number of vertices on side V (n): ";
     cin >> n;*/
     
-    vector<vector<int>> results(29, vector<int>(29,0));
+    vector<vector<int>> results(39, vector<int>(39,0));
     vector<pair<int,int>> n_mqueue;
-    for(int firstcord=2;firstcord<=30;firstcord++){
-        for (int secondcord = firstcord; secondcord <= 30; secondcord++)
+    for(int firstcord=2;firstcord<=40;firstcord++){
+        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
@@ -266,7 +266,7 @@ int main() {
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 50000;  // Number of trials
+        int iterations = 16000;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
@@ -306,7 +306,7 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("REAL_MT_log.txt", std::ios_base::app);
+        logfile.open("MT_LARGER_SMART_CUSTOMP_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         logfile<<endl;
@@ -322,7 +322,7 @@ int main() {
     }
 
     stringstream str;
-    str<<"REAL_MT_results.txt";
+    str<<"MT_LARGER_SMART_CUSTOMP_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -335,7 +335,7 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"REAL_MT: "<<duration<<"seconds\n";
+    logfile<<"MT_LARGER_SMART_CUSTOMP: "<<duration<<"seconds\n";
     logfile.close();
 
     return 0;
