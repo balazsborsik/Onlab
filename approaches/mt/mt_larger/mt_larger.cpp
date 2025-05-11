@@ -266,7 +266,7 @@ int main() {
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 16000;  // Number of trials
+        int iterations = 8000;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
