@@ -115,6 +115,11 @@ int upperBound(int s, int t, int m, int n){
     return (int)previous;
 }
 
+double calculate_p_from_LLL(int n, int m){
+    double d=nCr(m,2)*nCr(n,2)-(nCr(m-2,2)*nCr(n,2)+2*(m-2)*nCr(n-2,2)+nCr(n-2,2))-1;
+    return(pow(1.0/(4*d),1.0/4));
+}
+
 // Function to check if adding edge (u, v) creates a K_{2,2}
 bool createsK22(const vector<vector<int>>& adj, int m, int n, int u, int v) {
     // Check for another vertex u2 that shares neighbor v
@@ -230,7 +235,7 @@ int main() {
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 13000;  // Number of trials
+        int iterations = 15000;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
@@ -240,7 +245,8 @@ int main() {
         for (int u = 0; u < m; ++u)
                 for (int v = 0; v < n; ++v)
                     edges.emplace_back(u, v);
-        double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
+        //double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
+        double p=calculate_p_from_LLL(n,m);
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
 
@@ -270,7 +276,7 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("MT_log.txt", std::ios_base::app);
+        logfile.open("MT_LLL_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         logfile<<endl;
@@ -286,7 +292,7 @@ int main() {
     }
 
     stringstream str;
-    str<<"MT_results.txt";
+    str<<"MT_LLL_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -299,7 +305,7 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"MT: "<<duration<<"seconds\n";
+    logfile<<"MT_LLL: "<<duration<<"seconds\n";
     logfile.close();
 
     return 0;
