@@ -523,7 +523,6 @@ vector<vector<int>> run_in_range(int min, int max, bool appendToM, int runid){
                 }
             }
             stats.add(edgeCount);
-            stats.add(edgeCount);
             if (edgeCount > maxEdges) {
                 maxEdges = edgeCount;
                 graph=adj;

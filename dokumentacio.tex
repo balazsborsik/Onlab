@@ -9,6 +9,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{minted} 
+\usepackage{enumitem}
  \geometry{ a4paper, textwidth=180mm, textheight=257mm, left=15mm, top=20mm, bottom=25mm}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -51,6 +52,44 @@ Alsó becslésekre kevesebb képlet található; ezekben az esetekben különfé
 
 Az önálló labor célja a random konstrukciókkal kapott alsó becslések vizsgálata és programozása volt.
 
+Egy \emph{incidenciastruktúra} egy $(P, L, I)$ hármas, ahol:
+\begin{itemize}[nosep]
+  \item $P$ egy halmaz, elemei a \emph{pontok},
+  \item $L$ egy $P$-től különböző halmaz, elemei az \emph{egyenesek} (vagy blokkok),
+  \item $I \subseteq P \times L$ az \emph{incidenciareláció}, vagyis azon pont–egyenes párok halmaza, melyek „kapcsolatban állnak egymással”.
+\end{itemize}
+
+Minden incidenciastruktúra megfeleltethető egy $G = (A, B, E)$ páros gráfnak, ahol $A = P$, $B = L$, és $a \in A$, $l \in L$ között akkor van él, ha $(a, l) \in I$.
+
+Legyen $\emptyset \neq K \subset \mathbb{Z}^+$. Egy $(P, B)$ incidenciastruktúrát \emph{$t$--$(v, K, \lambda)$ designnak} nevezünk, ha:
+\begin{itemize}[nosep]
+  \item $|P| = v$,
+  \item minden $B \in B$ esetén $|B| \in K$,
+  \item minden $t$ különböző pont pontosan $\lambda$ közös blokkban szerepel.
+\end{itemize}
+Ha $K = \{k\}$, akkor egyszerűen $t$--$(v, k, \lambda)$ designról beszélünk.
+
+Ilyen design esetén:
+\[
+b = |B| = \lambda \binom{v}{t} \bigg/ \binom{k}{t}, \quad
+r = \frac{bk}{v} = \lambda \binom{v-1}{t-1} \bigg/ \binom{k-1}{t-1}
+\]
+ahol $b$ a blokkok száma, $r$ pedig az egy pontra eső blokkok száma. Feltételezzük, hogy $k < v$ és $\lambda \geq 1$.
+
+A $t$--$(v, k, \lambda)$ design incidenciagrafja $K_{t, \lambda+1}$-mentes, és ezek tartalmazzák a legtöbb élt az ilyen típusú gráfok közül.
+
+A $(t, v, k, \lambda)$ paramétereket akkor nevezzük \emph{megengedettnek} (vagy admisszibilisnek), ha pozitív egészek, teljesül:
+\[
+2 \leq t \leq k < v, \quad
+b = \lambda \binom{v}{t} \bigg/ \binom{k}{t} \in \mathbb{Z}, \quad
+r = \lambda \binom{v-1}{t-1} \bigg/ \binom{k-1}{t-1} \in \mathbb{Z}
+\]
+
+Például egy $q$ rendű projektív sík egy $2$--$(q^2 + q + 1, q + 1, 1)$ design.
+\\[5mm]
+\noindent Forrás: \textit{Damásdi, G., Héger, T. and Szőnyi, T., 2013. The Zarankiewicz problem, cages and geometries.}
+
+
 \section*{3. Felső becslések bemutatása}
 A felső becslésekhez alkalmazható például a \textbf{Jensen-egyenlőtlenség}, amely az alábbi módon fogalmazható meg:
 
@@ -76,7 +115,7 @@ e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s 
 
 \section*{4. Programozás, módszerek}
 
-\textbf{Program alapja:} A program minden változata \texttt{C++} nyelven készült. A gráfokat szomszédossági mátrixban tároljuk, mivel a vizsgált intervallumban a használt algoritmusokkal ez a módszer gyorsabbnak bizonyult az éllistás tárolásnál.
+\textbf{Program alapja:} A program minden változata \texttt{C++} nyelven készült. A gráfokat szomszédsági mátrixban tároljuk, mivel a vizsgált intervallumban a használt algoritmusokkal ez a módszer gyorsabbnak bizonyult az éllistás tárolásnál.
 
 
 \subsection*{C\textsubscript{4}-ek algoritmusai}
@@ -85,6 +124,14 @@ e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s 
     \item \textbf{Triviális módszer:} Véletlenszerű sorrendben húzunk be éleket. Ha egy él behúzása $C_4$-et hozna létre, akkor azt az élt nem húzzuk be.
     
     \item \textbf{Első irány – Moser–Tardos módszer:} 
+
+    \textbf{Definíció 14.} Legyenek $E_1, E_2, \ldots, E_n$ események egy valószínűségi térből.  
+    A $G$ gráfot \emph{függetlenségi gráfnak} nevezzük, ha csúcshalmaza $\{1, 2, \ldots, n\}$, és minden $i$-re az $E_i$ esemény teljesen független az 
+    \[
+    \{ E_j : j \ne i,\ (j, i) \notin E(G) \}
+    \]
+    események halmazától.
+    
     
     \textbf{Tétel (LLL egy változata):} Legyenek $E_1, \dots, E_n$ események egy valószínűségi térben, $G$ legyen egy függetlenségi gráf, $d \geq 1$, és teljesüljön:
     \begin{itemize}
@@ -101,11 +148,37 @@ e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s 
     \end{enumerate}
 
     \textit{Megjegyzés:} Moser és Tardos bizonyították, hogy a 2. lépést várhatóan legfeljebb $\frac{n}{d-1}$ alkalommal kell elvégezni.
-
+    \\[5mm]
+    \noindent Forrás: \textit{Rónyai Lajos Véletlen és algoritmusok 2011}
+    \\[5mm]
     \textbf{Programváltozatok:}
     \begin{enumerate}
         \item $E_i$ esemény: Egy csúcsosztályban két csúcsnak van két közös szomszédja.
-        \item $E_i$ esemény: $C_4$ képződik.
+        \item $E_i$ esemény: $C_4$ képződik.\\
+        A $G$ függetlenségi gráfban a csúcsok foka:
+
+        \[
+        d = \binom{m}{2} \binom{n}{2} 
+        - \left( 
+        \binom{m-2}{2} \binom{n}{2} 
+        + 2 \binom{m-2}{1} \binom{n-2}{2} 
+        + \binom{n-2}{2} 
+        \right) - 1
+        \]
+        
+        \[
+        4dp \leq 1
+        \]
+Mivel egy $C_4$-et négy él behúzásával kapunk, ezért:
+        \[
+         p = \varepsilon^4
+        \]
+        \[
+        \varepsilon^4 \leq \frac{1}{4d}
+        \]
+        \[
+        \varepsilon = \left( \frac{1}{4d} \right)^{1/4}
+        \]
     \end{enumerate}
 
     A $p$ (élbehúzási valószínűség) értéke kezdetben az LLL alapján lett megválasztva. Később, mivel $p$ növelése jobb eredményeket adott hasonló futásidő mellett, ezért a prezentált eredményekben:
@@ -231,7 +304,7 @@ Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb ered
 \section*{Programváltozatok}
 
 \subsection*{1. Mohó algoritmus}
-\textbf{Algoritmus:} Módszer random sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
+\textbf{Algoritmus:} Véletlen sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
 
 \textbf{Motiváció:} Az éleket csak sorban vizsgálva a gráf nagyon aszimmetrikus lenne, például az elsőnek vizsgált csúcs össze lenne kötve az egész másik csúcsosztállyal, és mivel a felső becslések is minél egyenletesebb fokszámeloszlást vesznek alapul, a projektív síkok, és abból képzett konstrukciók is ilyenek, ezért az élek random sorrendje lehetővé teszi egy átlagosan sokkal kiegyensúlyozottabb gráf előállítását, miközben a gráf továbbra is triviálisan nem kiegészíthető marad.
 
@@ -240,16 +313,19 @@ Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb ered
 \centering
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{Mohó algoritmus} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
-$Z(14, 29)$ & 85 & 85 \\
-$Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
-$Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(9,30)$  & 63 \\
+$Z(14, 29)$ & 85 \\
+$Z(20, 20)$ & 88 \\
+$Z(20, 37)$ & 130 \\
+$Z(30, 30)$ & 150 \\
+$Z(40, 40)$ & 222 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 93.94\% \\
+\hline
+Futásidő & 1843s \\
+Iteráció & 18000 \\
 \hline
 \end{tabular}
 \end{table}
@@ -351,6 +427,119 @@ $Z(20,37)$ & 116 & 116 & 116 & 116 & 116 & 116 \\
 \caption{Különböző algoritmusok $Z(n,m)$ értékeinek összehasonlítása}
 \end{table}
 
+\subsection*{6. Több iteráció futtatása}
+\textbf{Algoritmus:}
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+    \State ...
+    \For{belső iterációszám}
+        \State véletlenszerű élek beszúrása $p$ valószínűséggel
+        \While{van benne $K_{2,2}$}
+            \State távolítsuk el azt az $\text{élt}$, amit a legtöbb $K_{2,2}$ tartalmaz
+        \EndWhile
+    \EndFor
+    \State ...
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Motiváció:} A legtöbb $C_4$-ben szereplő élek eltávolítására épülő változat célja, hogy kevesebb él törlésével szüntesse meg a $C_4$-eket, miközben megőrzi a gráf kiegyensúlyozott szerkezetét. Ha a gráf egy része már eleve kiegyensúlyozott, akkor az új élek hozzáadása nem, vagy csak minimálisan ront a szerkezeten. Ezzel szemben, ha egy részgráf erősen aszimmetrikus, akkor az új élek beszúrása és a későbbi célzott törlések javíthatják annak struktúráját. Így a folyamat végeredményeként a teljes gráf kiegyensúlyozottabbá válik, ami nagyobb élhalmazt, azaz több megtartható élt eredményezhet.
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{7. Dinamikusan karbantartott valószínűségek}
+\textbf{Algoritmus:} Kísérletezés után a legjobb alsó korlátokat az alábbi módszer adta, a valószínűségek számítása az alábbi
+képlet alapján történt:
+\begin{algorithm}[H]
+\caption{élbehúzási valószínűségek kódrészlet}
+\begin{minted}{c++} 
+    int expected_m = ((double)upper_bound / m+0.5); // m osztályú csúcs várható értéke
+    int expected_n = ((double)upper_bound / n+0.5); // n osztályú csúcs várható értéke
+    double expected_n_percent = (double)upper_bound / (n * m);
+    
+    double get_multiplier(int v_m){
+        if(degree_m[v_m] >= expected_m){
+            if(degree_m[v_m] == expected_m)
+                return 0.9;
+            return 0.5;
+        }
+        return 6.7 - 5.6 * ((double)degree_m[v_m] / expected_m);
+    }
+
+    double get_p(int v_m, int v_n){
+        int n = degree_n[v_n];
+        return min(get_multiplier(v_m) * (expected_n_percent * 1.1
+               - (n/expected_n) * expected_n_percent), 0.8);
+    }
+\end{minted}    
+\end{algorithm}
+\textbf{Motiváció:} A következő fejlesztés az élbehúzási valószínűségek futás közbeni módosítása volt. A cél az volt, hogy a csúcsosztályok fokszámai a Roman-féle felső becslés várható értékei felé konvergáljanak. Mivel a Roman-féle felső becslés is egy olyan kiegyensúlyozott gráfot vesz alapul, ahol a kisebbik csúcsosztályban két csúcs fokszámának eltérése legfeljebb egy lehet.
+
+\textbf{Eredmények:}
+Megjegyzés: Látni lehet, hogy több iteráció futtatása igazán a dinamikusan karbantartott módszerrel kombinálva hatékony, a lenti eredmények is ezt támasztják alá.
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{7. További Dinamikus valószínúségi módszerek}
+
+\textbf{1. Csak a nagyobb csúcsosztály fokszámainak figyelembevétele:} A Roman becslés is csak a nagyobbik osztály fokszámait használja, a kisebbik osztály fokszámai nincsenek figyelembe véve.\\
+\textbf{2. Valószínűségek fixálása minden iterációnál:} Iterációk előtt a valószínűségek fixálása úgy, hogy a behúzott élek várható száma a felső becslés adott százaléka legyen. Így például, ha a felső becslés 100\%-ára állítjuk be a várható értéket, akkor törlések előtt a gráf élszámának várható értéke minden iteráció után a felső becslés lesz, aminél több élt úgysem húzhatnánk be a gráfba.
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\hline
+$Z(9,30)$  & 75 & 75 \\
+$Z(14, 29)$ & 85 & 85 \\
+$Z(20, 20)$ & 90 & 90 \\
+$Z(20, 37)$ & 116 & 116 \\
+$Z(30, 30)$ & 150 & 150 \\
+$Z(40, 40)$ & 200 & 200 \\
+\hline
+Él \% & 50\% & 50\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{8. Már megtalált gráfok felhasználása bemenetként}
+\textbf{Algoritmus:} Mielőtt elkezdenénk futtatni az algoritmusunkat Z(m,n)-re keressük meg az eddigi legjobb Z(m-1,n) vagy Z(m,n-1) értéket és olvassuk be a hozzá tartozó gráfot. (A program tesztelésénél ötször Z(m-1,n), ötször Z(m,n-1) adja a kiinduló gráfot, ezek felválltva vannak futtatva). Miután megvan a kiinduló gráf az újonnan hozzávett $m'$ csúcsból kimenő éleket véletlen sorrendben megpróbáljuk hozzávenni a gráfhoz. Ehhez először végigmegyünk véletlen sorrendben az érintetlen $N$ csúcsosztály csúcsain, és ha az eddig kiválasztott $N'$ csúcsoknak nincs közös szomszédja az éppen vizsgált $n' \in N$ csúccsal, akkor kiválasztjuk, ellenkező esetben nem.  Így kapunk egy $N'$ csúcshalmazt az érintetlen $N$ csúcsosztályból, ezt a folyamatot $\tfrac{|N|*|M|}{2}+5$-ször megismételjük, majd ezután a legnagyobb elemszámú csúcshalmaz lesz összekötve az újonnan hozzávett csúccsal. Látható, hogy az így kapott kiinduló gráf továbbra is $C_4$ mentes marad, hiszen $N'$-ben minden $n_i$, $n_j$ csúcspárnak pontosan egy közös szomszédja van, a most hozzávett $m'$ csúcs.
+
+\textbf{Motiváció:} Magától értetődő, hogy ha már van egy jó gráf, amit valahogyan újra tudunk használni a futás közben, akkor nem éri meg nulláról indulni, hiszen a már meglévő gráf felépítése is időt vesz el, így ez többé kevésbé megspórolható. A másik megalapozottabb érv az egy csúcs hozzáadásához, az az, hogy "tudományos háttér" 
 
 \vspace{1cm}\vfill
 Budapest, \today
