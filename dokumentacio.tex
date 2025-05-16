@@ -10,6 +10,7 @@
 \usepackage{algpseudocode}
 \usepackage{minted} 
 \usepackage{enumitem}
+\usepackage{bm}
  \geometry{ a4paper, textwidth=180mm, textheight=257mm, left=15mm, top=20mm, bottom=25mm}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -42,55 +43,75 @@ Témavezető: Dr.Héger Tamás
 \vspace{1cm}
 
 \section*{1. Alapfogalmak}
-\textbf{Páros gráf:} (Szükséges-e? – Nem biztos.)\\[2mm]
-\textbf{Zarankiewicz-szám:} Egy $G = (A,B;E)$ páros gráf $K_{s,t}$-mentes, ha nem tartalmaz olyan $s$ csúcsot $A$-ban és $t$ csúcsot $B$-ben, amelyek egy $K_{s,t}$-vel izomorf részgráfot alkotnak. Az $(m,n)$ méretű $K_{s,t}$-mentes páros gráf éleinek maximális számát $Z_{s,t}(m,n)$-nel jelöljük, és Zarankiewicz-számnak nevezzük.\\[2mm]
-\textbf{Zarankiewicz-probléma (eredeti megfogalmazás):} Vegyünk egy $n \times m$-es mátrixot, amely csak 0 és 1 értékeket tartalmaz. Legkevesebb hány darab 1-es szükséges, hogy mindenképp tartalmazzon $s \times t$-es csupa 1-es részmátrixot? Ez a definíció megegyezik $Z_{s,t}(m,n) + 1$-gyel.
+\begin{itemize}
+    \item \bm{$K_{n,m}$}: Egy $(N,M,E)$ teljes páros gráf, ahol $|N|=n$, $|M|=m$ és bármely $u \in N$ és $v \in M$ között van él behúzva.
+    \item \bm{$C_4$}: $K_{2,2}$
+    \item \textbf{Páros gráf mátrixos ábrázolása}: A dokumentumban a \emph{gráf} kifejezés mindig páros gráfokra utal, még abban az esetben is, ha ez nincs külön kihangsúlyozva. Egy $(N, M, E)$ páros gráfhoz gyakran hozzárendeljük a hozzá tartozó szomszédsági mátrixot, melynek mérete $|N| \times |M|$. Ebben a megfeleltetésben a mátrix $n$-edik sora egy $N$-beli csúcsot, az $m$-edik oszlopa pedig egy $M$-beli csúcsot reprezentál. A két csúcs között akkor van él, ha a szomszédsági mátrix $(n,m)$ pozíciójában $1$ található; ha pedig $0$, akkor nincs él a két csúcs között.
+    \item \textbf{Zarankiewicz-szám:} Egy $G = (A,B;E)$ páros gráf $K_{s,t}$-mentes, ha nem tartalmaz olyan $s$ csúcsot $A$-ban és $t$ csúcsot $B$-ben, amelyek egy $K_{s,t}$-vel izomorf részgráfot alkotnak. Az $(m,n)$ méretű $K_{s,t}$-mentes páros gráf éleinek maximális számát $Z_{s,t}(m,n)$-nel jelöljük, és Zarankiewicz-számnak nevezzük. A dokumentumban amennyiben $s,t$ nincs jelölve, akkor $Z(m,n)$ ekvivalens $Z_{s,t}(m,n)$-nel.
+    \item \textbf{Zarankiewicz-probléma (eredeti megfogalmazás):} Vegyünk egy $n \times m$-es mátrixot, amely csak 0 és 1 értékeket tartalmaz. Legkevesebb hány darab 1-es szükséges, hogy mindenképp tartalmazzon $s \times t$-es csupa 1-es részmátrixot? Ez a definíció megegyezik $Z_{s,t}(m,n) + 1$ -el (ez a fent bemutatott mátrixos áttérés után rögtön látszik).
+    \item Egy $C_4$ mentes gráf \textbf{triviálisan kiegészíthető}, ha létezik olyan még nem behúzott él, melynek behúzása után nem keletkezik $C_4$.
+\end{itemize}
+
 \section*{2. Bemutatás}
 Mint látható, a Zarankiewicz probléma egy extremális gráfelméleti probléma. A problémára több képlet is ad értelmezhető felső becsléseket, de ezek a becslések általában a paraméterek nagyságának vagy aszimmetriájának növelésével jelentősen eltérhetnek a pontos értékektől.\\
 
 Alsó becslésekre kevesebb képlet található; ezekben az esetekben különféle konstrukciók (pl. projektív síkok, affin síkok), vagy kimerítő keresések adhatnak jobb közelítő értéket.\\
 
-Az önálló labor célja a random konstrukciókkal kapott alsó becslések vizsgálata és programozása volt.
+Az önálló labor célja a random konstrukciókkal kapott alsó becslések vizsgálata és programozása volt. A kipróbált módszerek többsége már ismert módszerek különböző heurisztikák alapján történő módosításainak eredménye.
 
-Egy \emph{incidenciastruktúra} egy $(P, L, I)$ hármas, ahol:
-\begin{itemize}[nosep]
-  \item $P$ egy halmaz, elemei a \emph{pontok},
-  \item $L$ egy $P$-től különböző halmaz, elemei az \emph{egyenesek} (vagy blokkok),
-  \item $I \subseteq P \times L$ az \emph{incidenciareláció}, vagyis azon pont–egyenes párok halmaza, melyek „kapcsolatban állnak egymással”.
+\section*{3. Matematikai háttér}
+
+\begin{itemize}
+    \item Egy \textbf{incidenciastruktúra} egy $(\mathcal{P}, \mathcal{L}, I)$ hármas, ahol:
+    \begin{itemize}[nosep]
+      \item $\mathcal{P}$ egy halmaz, elemei a \emph{pontok},
+      \item $L$ egy $P$-től különböző halmaz, elemei az \emph{egyenesek} (vagy blokkok),
+      \item $I \subseteq P \times L$ az \emph{incidenciareláció}, vagyis azon pont–egyenes párok halmaza, melyek „kapcsolatban állnak egymással”.
+    \end{itemize}
+    Minden incidenciastruktúra megfeleltethető egy $G = (A, B, E)$ páros gráfnak, ahol $A = P$, $B = L$, és $a \in A$, $l \in L$ között akkor van él, ha $(a, l) \in I$.
+    \item A \textbf{projektív sík} egy incidenciastruktúra $(\mathcal{P}, \mathcal{L}, I)$, ahol:
+    \begin{itemize}[nosep]
+      \item $\mathcal{P}$ a \emph{pontok} halmaza,
+      \item $\mathcal{L}$ az \emph{egyenesek} (vagy blokkok) halmaza,
+      \item $I \subseteq \mathcal{P} \times \mathcal{L}$ az \emph{incidenciareláció},
+    \end{itemize}
+    amely az alábbi tulajdonságokkal rendelkezik:
+    \begin{itemize}[nosep]
+      \item Bármely két különböző pontra pontosan egy olyan egyenes létezik, amely mindkettővel incidens.
+      \item Bármely két különböző egyenesre pontosan egy olyan pont létezik, amely mindkettővel incidens.
+      \item Létezik négy pont, amelyek közül semelyik hármat nem tartalmazza ugyanaz az egyenes (vagyis nincs olyan egyenes, amely háromnál több közülük levő ponttal incidens lenne).
+    \end{itemize}
+    
+    A definícióból következik, hogy bármely egyeneshez ugyanannyi pont tartozik, mint ahány egyenes incidens egy adott ponttal. Ezt a közös számot $q+1$-nek jelöljük, ahol $q$ a sík \emph{rendje}.
+    \item \bm{$t-(v,K,\lambda)$} \textbf{design:} Legyen $\emptyset \neq K \subset \mathbb{Z}^+$. Egy $(P, B)$ incidenciastruktúrát \emph{$t-(v, K, \lambda)$ designnak} nevezünk, ha:
+    \begin{itemize}[nosep]
+      \item $|P| = v$,
+      \item minden $B \in B$ esetén $|B| \in K$,
+      \item minden $t$ különböző pont pontosan $\lambda$ közös blokkban szerepel.
+    \end{itemize}
+    Ha $K = \{k\}$, akkor egyszerűen $t-(v, k, \lambda)$ designról beszélünk.
+    Ilyen design esetén:
+    \[
+    b = |B| = \lambda \binom{v}{t} \bigg/ \binom{k}{t}, \quad
+    r = \frac{bk}{v} = \lambda \binom{v-1}{t-1} \bigg/ \binom{k-1}{t-1}
+    \]
+    ahol $b$ a blokkok száma, $r$ pedig az egy pontra eső blokkok száma. Feltételezzük, hogy $k < v$ és $\lambda \geq 1$.
+    
+    A $t$--$(v, k, \lambda)$ design incidenciagrafja $K_{t, \lambda+1}$-mentes, és ezek tartalmazzák a legtöbb élt az ilyen típusú gráfok közül.
+    
+    A $(t, v, k, \lambda)$ paramétereket akkor nevezzük \emph{megengedettnek} (vagy admisszibilisnek), ha pozitív egészek, teljesül:
+    \[
+    2 \leq t \leq k < v, \quad
+    b = \lambda \binom{v}{t} \bigg/ \binom{k}{t} \in \mathbb{Z}, \quad
+    r = \lambda \binom{v-1}{t-1} \bigg/ \binom{k-1}{t-1} \in \mathbb{Z}
+    \]
+    
+    Például egy $q$ rendű projektív sík egy $2-(q^2 + q + 1, q + 1, 1)$ design.
+    \\[5mm]
+    \noindent Forrás: \textit{Damásdi, G., Héger, T. and Szőnyi, T., 2013. The Zarankiewicz problem, cages and geometries.}
 \end{itemize}
 
-Minden incidenciastruktúra megfeleltethető egy $G = (A, B, E)$ páros gráfnak, ahol $A = P$, $B = L$, és $a \in A$, $l \in L$ között akkor van él, ha $(a, l) \in I$.
-
-Legyen $\emptyset \neq K \subset \mathbb{Z}^+$. Egy $(P, B)$ incidenciastruktúrát \emph{$t$--$(v, K, \lambda)$ designnak} nevezünk, ha:
-\begin{itemize}[nosep]
-  \item $|P| = v$,
-  \item minden $B \in B$ esetén $|B| \in K$,
-  \item minden $t$ különböző pont pontosan $\lambda$ közös blokkban szerepel.
-\end{itemize}
-Ha $K = \{k\}$, akkor egyszerűen $t$--$(v, k, \lambda)$ designról beszélünk.
-
-Ilyen design esetén:
-\[
-b = |B| = \lambda \binom{v}{t} \bigg/ \binom{k}{t}, \quad
-r = \frac{bk}{v} = \lambda \binom{v-1}{t-1} \bigg/ \binom{k-1}{t-1}
-\]
-ahol $b$ a blokkok száma, $r$ pedig az egy pontra eső blokkok száma. Feltételezzük, hogy $k < v$ és $\lambda \geq 1$.
-
-A $t$--$(v, k, \lambda)$ design incidenciagrafja $K_{t, \lambda+1}$-mentes, és ezek tartalmazzák a legtöbb élt az ilyen típusú gráfok közül.
-
-A $(t, v, k, \lambda)$ paramétereket akkor nevezzük \emph{megengedettnek} (vagy admisszibilisnek), ha pozitív egészek, teljesül:
-\[
-2 \leq t \leq k < v, \quad
-b = \lambda \binom{v}{t} \bigg/ \binom{k}{t} \in \mathbb{Z}, \quad
-r = \lambda \binom{v-1}{t-1} \bigg/ \binom{k-1}{t-1} \in \mathbb{Z}
-\]
-
-Például egy $q$ rendű projektív sík egy $2$--$(q^2 + q + 1, q + 1, 1)$ design.
-\\[5mm]
-\noindent Forrás: \textit{Damásdi, G., Héger, T. and Szőnyi, T., 2013. The Zarankiewicz problem, cages and geometries.}
-
-
-\section*{3. Felső becslések bemutatása}
+\section*{4. Felső becslések bemutatása}
 A felső becslésekhez alkalmazható például a \textbf{Jensen-egyenlőtlenség}, amely az alábbi módon fogalmazható meg:
 
 \[
@@ -113,195 +134,9 @@ Az egyenlőség pontosan akkor áll fenn, ha $x_i \in \{p, p+1\}$ minden $1 \leq
 e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s - 1)}{s}.
 \]
 
-\section*{4. Programozás, módszerek}
+\section*{Programváltozatok}
 
 \textbf{Program alapja:} A program minden változata \texttt{C++} nyelven készült. A gráfokat szomszédsági mátrixban tároljuk, mivel a vizsgált intervallumban a használt algoritmusokkal ez a módszer gyorsabbnak bizonyult az éllistás tárolásnál.
-
-
-\subsection*{C\textsubscript{4}-ek algoritmusai}
-
-\begin{itemize}
-    \item \textbf{Triviális módszer:} Véletlenszerű sorrendben húzunk be éleket. Ha egy él behúzása $C_4$-et hozna létre, akkor azt az élt nem húzzuk be.
-    
-    \item \textbf{Első irány – Moser–Tardos módszer:} 
-
-    \textbf{Definíció 14.} Legyenek $E_1, E_2, \ldots, E_n$ események egy valószínűségi térből.  
-    A $G$ gráfot \emph{függetlenségi gráfnak} nevezzük, ha csúcshalmaza $\{1, 2, \ldots, n\}$, és minden $i$-re az $E_i$ esemény teljesen független az 
-    \[
-    \{ E_j : j \ne i,\ (j, i) \notin E(G) \}
-    \]
-    események halmazától.
-    
-    
-    \textbf{Tétel (LLL egy változata):} Legyenek $E_1, \dots, E_n$ események egy valószínűségi térben, $G$ legyen egy függetlenségi gráf, $d \geq 1$, és teljesüljön:
-    \begin{itemize}
-        \item $\mathbb{P}(E_i) \leq p$ minden $i$-re,
-        \item $G$-ben a csúcsok foka legfeljebb $d$,
-        \item $4dp \leq 1$.
-    \end{itemize}
-    Ekkor $\mathbb{P}\left( \bigcap_{i=1}^n \overline{E_i} \right) > 0$.
-    \\[2mm]
-    \textbf{Moser-Tardos algoritmus:}
-    \begin{enumerate}
-        \item Kiértékeljük a $\xi \in \mathcal{P}$ változókat egy véletlen $\omega \in \Omega$ helyen. Ha egyik $E_i$ sem következik be, akkor $\omega$ egy elemi esemény a $\bigcap_{i=1}^n \overline{E_i}$ metszetből, és az eljárás véget ér.
-        \item Ha valamelyik $E_j$ bekövetkezett, akkor újra kiértékeljük a $P_j$-beli $\xi$ változókat a saját eloszlásuk szerint, függetlenül. A $P \setminus P_j$ változókat változatlanul hagyjuk. Ezután ismét ellenőrizzük, hogy bekövetkezik-e valamelyik $E_i$, és szükség esetén ismételjük a 2. lépést.
-    \end{enumerate}
-
-    \textit{Megjegyzés:} Moser és Tardos bizonyították, hogy a 2. lépést várhatóan legfeljebb $\frac{n}{d-1}$ alkalommal kell elvégezni.
-    \\[5mm]
-    \noindent Forrás: \textit{Rónyai Lajos Véletlen és algoritmusok 2011}
-    \\[5mm]
-    \textbf{Programváltozatok:}
-    \begin{enumerate}
-        \item $E_i$ esemény: Egy csúcsosztályban két csúcsnak van két közös szomszédja.
-        \item $E_i$ esemény: $C_4$ képződik.\\
-        A $G$ függetlenségi gráfban a csúcsok foka:
-
-        \[
-        d = \binom{m}{2} \binom{n}{2} 
-        - \left( 
-        \binom{m-2}{2} \binom{n}{2} 
-        + 2 \binom{m-2}{1} \binom{n-2}{2} 
-        + \binom{n-2}{2} 
-        \right) - 1
-        \]
-        
-        \[
-        4dp \leq 1
-        \]
-Mivel egy $C_4$-et négy él behúzásával kapunk, ezért:
-        \[
-         p = \varepsilon^4
-        \]
-        \[
-        \varepsilon^4 \leq \frac{1}{4d}
-        \]
-        \[
-        \varepsilon = \left( \frac{1}{4d} \right)^{1/4}
-        \]
-    \end{enumerate}
-
-    A $p$ (élbehúzási valószínűség) értéke kezdetben az LLL alapján lett megválasztva. Később, mivel $p$ növelése jobb eredményeket adott hasonló futásidő mellett, ezért a prezentált eredményekben:
-    \begin{itemize}
-        \item Az 1. esetben $p$ a Roman-féle felső becslés szerinti várható érték 80\%-a.
-        \item A 2. esetben 85\%-a.
-    \end{itemize}
-\end{itemize}
-
-\begin{algorithm}[H]
-\caption{Moser Tardos pszeudokódja}
-\begin{algorithmic}[1]
-
-\Function{\textproc{BecsültMaxÉlek}}{$m$, $n$, $\text{iterációk}$}
-    \State $\text{maxélek} \gets 0$
-    \State $\text{élek} \gets$ minden lehetséges él $m$ és $n$ között
-    \State $p \gets$ felső becslés alapján számolt valószínűség
-
-    \For{$i = 1$ \textbf{tól} $\text{iterációk}$}
-        \State gráf inicializálása üres $m \times n$ mátrixként
-        \State véletlenszerű élek beszúrása $p$ valószínűséggel
-
-        \While{van benne $K_{2,2}$}
-            \State távolítsuk el azt az $\text{élt}$, amit a legtöbb $K_{2,2}$ tartalmaz
-        \EndWhile
-
-        \State véletlenszerűen keverjük az éleket
-
-        \For{minden él}
-            \If{nem hoz létre $K_{2,2}$-t}
-                \State adjuk hozzá a gráfhoz
-            \EndIf
-        \EndFor
-
-        \If{aktuális gráf él száma $>$ $\text{maxélek}$}
-            \State $\text{maxélek} \gets$ új érték
-        \EndIf
-    \EndFor
-
-    \State \Return $\text{maxélek}$
-\EndFunction
-
-\end{algorithmic}
-\end{algorithm}
-
-
-\subsection*{Második irány – Dinamikusan karbantartott valószínűségek}
-
-A következő fejlesztés az élbehúzási valószínűségek futás közbeni módosítása volt. A cél az volt, hogy a csúcsosztályok fokszámai a Roman-féle felső becslés várható értékei felé konvergáljanak. Kísérletezés után a legjobb alsó korlátokat az alábbi módszer adta, a valószínűségek számítása az alábbi képlet alapján történt:
-
-\begin{algorithm}[H]
-\caption{élbehúzási valószínűségek kódrészlet}
-\begin{minted}{c++} 
-    int expected_m = ((double)upper_bound / m+0.5); // m osztályú csúcs várható értéke
-    int expected_n = ((double)upper_bound / n+0.5); // n osztályú csúcs várható értéke
-    double expected_n_percent = (double)upper_bound / (n * m);
-    
-    double get_multiplier(int v_m){
-        if(degree_m[v_m] >= expected_m){
-            if(degree_m[v_m] == expected_m)
-                return 0.9;
-            return 0.5;
-        }
-        return 6.7 - 5.6 * ((double)degree_m[v_m] / expected_m);
-    }
-
-    double get_p(int v_m, int v_n){
-        int n = degree_n[v_n];
-        return min(get_multiplier(v_m) * (expected_n_percent * 1.1
-               - (n/expected_n) * expected_n_percent), 0.8);
-    }
-\end{minted}    
-\end{algorithm}
-
-\textbf{További két módszer:}
-\begin{enumerate}
-    \item Csak a nagyobb csúcsosztály fokszámainak figyelembevétele.
-    \item Iterációk előtt a valószínűségek fixálása úgy, hogy a behúzott élek várható száma a felső becslés adott százaléka legyen.
-\end{enumerate}
-
-\subsection*{Harmadik fejlesztés – Több iteráció futtatása}
-\begin{algorithm}
-\begin{algorithmic}[1]
-    \State ...
-    \For{belső iterációszám}
-        \State véletlenszerű élek beszúrása $p$ valószínűséggel
-        \While{van benne $K_{2,2}$}
-            \State távolítsuk el azt az $\text{élt}$, amit a legtöbb $K_{2,2}$ tartalmaz
-        \EndWhile
-    \EndFor
-    \State ...
-\end{algorithmic}
-\end{algorithm}
-
-
-Több belső iteráció futtatása egy programfutás alatt javította az alsó becsléseket.
-
-\subsection*{Negyedik irány – Korábban talált gráfok újrafelhasználása}
-
-\textbf{Ötlet:} Amikor $Z(n,m)$-et számolunk, induljunk a korábban megtalált $Z(n-1, m)$ gráfból. Adjunk hozzá egy új csúcsot az $n$ csúcsosztályhoz, majd próbáljunk minél több élt behúzni ebből a csúcsból a másik osztályba anélkül, hogy $C_4$-et hoznánk létre.
-
-\textbf{Két változat:}
-\begin{enumerate}
-    \item A fenti módszer közvetlen megvalósítása.
-    \item A legjobb 5 gráf mentése és újraindítása a fenti stratégiával.
-\end{enumerate}
-
-\subsection*{Végső táblázat, értékelés}
-
-A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz(majd felette mindenhol pontos iterációszám és paraméterek). A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan.A minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
-Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb eredményeket produkált, azokban az esetekben, ahol a gráf optimális fokszámai erősen aszimmetrikusak.
-
-\textbf{Módosított logika:} Minden élhez futtatás előtt random eltérítési értéket generálunk, amely pozitív vagy negatív irányba módosítja az élbehúzási valószínűséget. Ez növeli az esélyt az aszimmetrikus, de optimális struktúrák megtalálására.
-
-\section*{Fogalmak}
-
-\begin{itemize}
-    \item $K_{n,m}$: Egy $(N,M,E)$ teljes páros gráf, ahol $|N|=n$, $|M|=m$ és bármely $u \in N$ és $v \in M$ között van él behúzva.
-    \item $C_4$: $K_{2,2}$
-    \item Egy gráf \textbf{triviálisan kiegészíthető}, ha létezik olyan még nem behúzott él, melynek behúzása után nem keletkezik $C_4$.
-\end{itemize}
-
-\section*{Programváltozatok}
 
 \subsection*{1. Mohó algoritmus}
 \textbf{Algoritmus:} Véletlen sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
@@ -539,7 +374,31 @@ $Z(40, 40)$ & 200 & 200 \\
 \subsection*{8. Már megtalált gráfok felhasználása bemenetként}
 \textbf{Algoritmus:} Mielőtt elkezdenénk futtatni az algoritmusunkat Z(m,n)-re keressük meg az eddigi legjobb Z(m-1,n) vagy Z(m,n-1) értéket és olvassuk be a hozzá tartozó gráfot. (A program tesztelésénél ötször Z(m-1,n), ötször Z(m,n-1) adja a kiinduló gráfot, ezek felválltva vannak futtatva). Miután megvan a kiinduló gráf az újonnan hozzávett $m'$ csúcsból kimenő éleket véletlen sorrendben megpróbáljuk hozzávenni a gráfhoz. Ehhez először végigmegyünk véletlen sorrendben az érintetlen $N$ csúcsosztály csúcsain, és ha az eddig kiválasztott $N'$ csúcsoknak nincs közös szomszédja az éppen vizsgált $n' \in N$ csúccsal, akkor kiválasztjuk, ellenkező esetben nem.  Így kapunk egy $N'$ csúcshalmazt az érintetlen $N$ csúcsosztályból, ezt a folyamatot $\tfrac{|N|*|M|}{2}+5$-ször megismételjük, majd ezután a legnagyobb elemszámú csúcshalmaz lesz összekötve az újonnan hozzávett csúccsal. Látható, hogy az így kapott kiinduló gráf továbbra is $C_4$ mentes marad, hiszen $N'$-ben minden $n_i$, $n_j$ csúcspárnak pontosan egy közös szomszédja van, a most hozzávett $m'$ csúcs.
 
-\textbf{Motiváció:} Magától értetődő, hogy ha már van egy jó gráf, amit valahogyan újra tudunk használni a futás közben, akkor nem éri meg nulláról indulni, hiszen a már meglévő gráf felépítése is időt vesz el, így ez többé kevésbé megspórolható. A másik megalapozottabb érv az egy csúcs hozzáadásához, az az, hogy "tudományos háttér" 
+\textbf{Motiváció:} Magától értetődő, hogy ha már van egy jó gráf, amit valahogyan újra tudunk használni a futás közben, akkor nem éri meg nulláról indulni, hiszen a már meglévő gráf felépítése is időt vesz el, így ez többé kevésbé megspórolható. A másik, megalapozottabb érv egy csúcs hozzáadására a következő:
+
+\begin{quote}
+Ha $G = (A, B, E)$ egy $K_{2,2}$-mentes, $(m,n)$ méretű páros gráf, és $\delta(A)$ az $A$ osztályban vett minimális fokszám, akkor
+\[
+Z(m-1, n) \geq |E(G)| - \delta(A),
+\]
+\[
+Z(m, n-1) \geq |E(G)| - \delta(B).
+\]
+\end{quote}
+Az állítás magától értetődő, ami viszont meglepő lehet, hogy sok esetben a bemutatott becslés használata elég a felső korlát eléréséhez. Ezt jól szemlélteti, hogy a $Z(13, 18)$-tól egészen $Z(3, 3)$-ig el lehet jutni ezzel az egy becsléssel, úgy hogy közben csak pontos értéken haladsz át. "Nem teljesen igaz meg kell csinálni rendesen, az elvétellel kapott gráf adja az inputot"
+
+\subsection*{9. Öt eddigi legjobb gráf felhasználása bemenetként}
+\textbf{Algoritmus:} Ugyanaz, mint az előző algoritmus, csak minden iterációban az eddigi legjobb öt kiinduló gráfot olvasunk be, és mindegyikből lefuttatjuk az algoritmust. Továbbá ebben a változatban nem csak a legjobb, hanem az öt legjobb gráfot mentjük el.
+
+\textbf{Motiváció:} Mi történik, hogyha $Z(m,n)$ és $Z(m,n+1)$ struktúrája lényegesen eltérő. Az eredeti kiegészítős módszerrel, ekkor hiába találjuk $(m,n)$-re az optimális gráfot a $(m,n+1)$-hez használt kiinduló gráfon nagyon sok módosítást kéne végeznünk, nem is biztos, hogy jól járunk a kiinduló gráfunkkal. Öt, élszámra már $Z(m,n)$-hez egészen közel lévő, strukturájukban különböző gráf használatával sokkal nagyobb az esélyünk, hogy megtaláljuk az ilyen eseteket.
+
+\subsection*{Végső táblázat, értékelés}
+
+A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz(majd felette mindenhol pontos iterációszám és paraméterek). A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan.A minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
+Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb eredményeket produkált, azokban az esetekben, ahol a gráf optimális fokszámai erősen aszimmetrikusak.
+
+\textbf{Módosított logika:} Minden élhez futtatás előtt random eltérítési értéket generálunk, amely pozitív vagy negatív irányba módosítja az élbehúzási valószínűséget. Ez növeli az esélyt az aszimmetrikus, de optimális struktúrák megtalálására.
+
 
 \vspace{1cm}\vfill
 Budapest, \today
