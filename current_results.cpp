@@ -57,8 +57,8 @@ int main(int argc, char* argv[]){
     int min = 2;
     int max = 40;
     if(argc==3){
-        int min = stoi( argv[1] );
-        int max = stoi( argv[2] );
+        min = stoi( argv[1] );
+        max = stoi( argv[2] );
         if (min>max || min<2 || max>50) {
             cerr << "first parameter can't be greater than second parameter and both parameters must be in the range of: 2-50" << endl;
             return 2;
