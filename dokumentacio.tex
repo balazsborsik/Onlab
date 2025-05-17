@@ -129,6 +129,36 @@ A projekt során is használt felső becslés pedig \textbf{Roman becslése} vol
 \\[2mm]
 Az egyenlőség pontosan akkor áll fenn, ha $x_i \in \{p, p+1\}$ minden $1 \leq i \leq n$ esetén, vagy ha $\{x_1, \dots, x_n, p, p+1\} \subset I'$ egy olyan intervallumban, amelyen $f$ lineáris.
 \\[2mm]
+\textbf{Bizonyítás:} Legyen $a, c \in \mathbb{R}$, ahol $a > 0$, továbbá legyen $F(x) = a f(x) - x + c$
+
+Válasszuk meg $a$ és $c$ értékét úgy, hogy teljesüljön:
+\[
+F(p) = a f(p) - p + c = 0,\quad F(p+1) = a f(p+1) - (p+1) + c = 0.
+\]
+Ebből következik:
+\[
+a = \frac{1}{f(p+1) - f(p)},\quad c = \frac{p f(p+1) - (p+1) f(p)}{f(p+1) - f(p)}.
+\]
+
+Mivel $f$ növő és konvex, ezért $a > 0$, így $F(x)$ is konvex.
+
+Két eset lehetséges:
+\begin{itemize}
+  \item Vagy $F(x) = 0$ egy $[p, p+1]$ intervallumot tartalmazó intervallumon, vagy
+  \item $F(x) = 0$ csak a $p$ és $p+1$ egész számokra teljesül.
+\end{itemize}
+Mindkét esetben $F(x) \geq 0$ minden egész $x$-re.
+
+Ezért:
+\[
+0 \leq \sum_{i=1}^n F(x_i) = \sum_{i=1}^n (a f(x_i) - x_i + c) = a \sum_{i=1}^n f(x_i) - \sum_{i=1}^n x_i + n c,
+\]
+amiből:
+\[
+\sum_{i=1}^n x_i \leq a \sum_{i=1}^n f(x_i) + n c.
+\]
+
+Az $a$ és $c$ behelyettesítésével megkapjuk az állított egyenlőtlenséget. Az egyenlőség pontosan akkor teljesül, ha minden $i$-re $F(x_i) = 0$, vagyis az ismertetett két eset valamelyike áll fenn.\\[2mm]
 \textbf{Roman-féle felső korlát:} Legyen $G = (A, B; E)$ egy $K_{s,t}$-mentes páros gráf, ahol $|A| = m$, $|B| = n$, és $p \geq s - 1$. Ekkor $G$ éleinek számára teljesül:
 \[
 e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s - 1)}{s}.
@@ -137,11 +167,13 @@ e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s 
 \section*{Programváltozatok}
 
 \textbf{Program alapja:} A program minden változata \texttt{C++} nyelven készült. A gráfokat szomszédsági mátrixban tároljuk, mivel a vizsgált intervallumban a használt algoritmusokkal ez a módszer gyorsabbnak bizonyult az éllistás tárolásnál.
+\\[2mm]
+\noindent \textbf{Eredmények táblázat jelölései:} Az eredmény táblázatban pár különböző méretű, n,m máretű Z(n,m) szolgál a módszer bemutatására. Továbbá még kettő mérőszám mindkét márőszám csak a Z(10,10) től Z(40,40)-ig tartó eredményekből dolgozik, hogy a módszereket ne torzítsák a 10,10 alatti könnyen megtalálható esetek. Az \emph{Él \%} a legjobb általunk talált eredményekkel veti össze az intervallumon a módszert, úgy, hogy összeadja az intervallumon belül talált legjobb gráfok éleit és az így kapott élszámot leosztja, a legjobb eredmények összélszámával. A \emph{Diff} azt mutatja meg, hogy hányszor adott a módszer teljesen/egy híján/két híján pontos értékeket, az alábbi formátumban : <pontos> <pontos -1> < pontos - 2>. (A 10-40 intervallumban összesen 496 vizsgált eset van)
 
 \subsection*{1. Mohó algoritmus}
-\textbf{Algoritmus:} Véletlen sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
+\textbf{Algoritmus:} Véletlen sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a kapott gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
 
-\textbf{Motiváció:} Az éleket csak sorban vizsgálva a gráf nagyon aszimmetrikus lenne, például az elsőnek vizsgált csúcs össze lenne kötve az egész másik csúcsosztállyal, és mivel a felső becslések is minél egyenletesebb fokszámeloszlást vesznek alapul, a projektív síkok, és abból képzett konstrukciók is ilyenek, ezért az élek random sorrendje lehetővé teszi egy átlagosan sokkal kiegyensúlyozottabb gráf előállítását, miközben a gráf továbbra is triviálisan nem kiegészíthető marad.
+\textbf{Motiváció:} Az éleket csak sorban vizsgálva a gráf nagyon aszimmetrikus lenne, például az elsőnek vizsgált csúcs össze lenne kötve az egész másik csúcsosztállyal, és mivel a felső becslések is minél egyenletesebb fokszámeloszlást vesznek alapul, a projektív síkok, és abból képzett konstrukciók is ilyenek, ezért az élek random sorrendje lehetővé teszi egy kiegyensúlyozottabb gráf előállítását, miközben a gráf továbbra is triviálisan nem kiegészíthető marad.
 
 \textbf{Eredmények:}
 \begin{table}[H]
@@ -157,7 +189,9 @@ $Z(20, 37)$ & 130 \\
 $Z(30, 30)$ & 150 \\
 $Z(40, 40)$ & 222 \\
 \hline
-Él \% & 93.94\% \\
+Él \% & 92.88\% \\
+\hline
+Diff & 69 46 33 \\
 \hline
 Futásidő & 1843s \\
 Iteráció & 18000 \\
@@ -174,18 +208,23 @@ Iteráció & 18000 \\
 \textbf{Eredmények:}
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{Nagyobb} & \textbf{Nagyobb + mohó} & \textbf{Kisebb + mohó} & \textbf{Nagyobb + LLL TODO} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
-$Z(14, 29)$ & 85 & 85 \\
-$Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
-$Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(9,30)$  & 45 & 63 & 63 & 0 \\
+$Z(14, 29)$ & 61 & 85 & 85 & 0 \\
+$Z(20, 20)$ & 58 & 87 & 89 & 0 \\
+$Z(20, 37)$ & 78 & 129 & 129 & 0 \\
+$Z(30, 30)$ & 88 & 149 & 150 & 0 \\
+$Z(40, 40)$ & 119 & 222 & 220 & 0 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 57.69\% & 92.63\% & 92.53\% & 92.63\%\\
+\hline
+Diff & 0 0 0 & 61 44 38 & 53 49 38 & TODO! \\
+\hline
+Futásidő & 1058s & 1755s & 1824s & TODO! \\
+Iteráció & 8000 & 8000 & 6000 & 8000 \\
 \hline
 \end{tabular}
 \end{table}
@@ -201,16 +240,21 @@ $Z(40, 40)$ & 200 & 200 \\
 \centering
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{MT C4 + mohó} & \textbf{MT C4 + LLL + Mohó} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
+$Z(9,30)$  & 63 & 72 \\
 $Z(14, 29)$ & 85 & 85 \\
-$Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
+$Z(20, 20)$ & 87 & 97 \\
+$Z(20, 37)$ & 130 & 130 \\
 $Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(40, 40)$ & 222 & 221 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 92.81\% & 92.83\% \\
+\hline
+Diff & 72 40 32 & 68 40 38 \\
+\hline
+Futásidő & 1828s & 1769s \\
+Iteráció & 13000 & 15000 \\
 \hline
 \end{tabular}
 \end{table}
@@ -223,49 +267,31 @@ $Z(40, 40)$ & 200 & 200 \\
 \textbf{Eredmények:}
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{MT C4 IMPROVED} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
-$Z(14, 29)$ & 85 & 85 \\
-$Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
-$Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(9,30)$  & 63 \\
+$Z(14, 29)$ & 85 \\
+$Z(20, 20)$ & 87 \\
+$Z(20, 37)$ & 130 \\
+$Z(30, 30)$ & 152 \\
+$Z(40, 40)$ & 223 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 92.92\% \\
+\hline
+Diff & 64 45 30 \\
+\hline
+Futásidő & 1739s \\
+Iteráció & 11000 \\
 \hline
 \end{tabular}
 \end{table}
 
-\subsection*{5. Eredmények Moser-Tardos módszerekkel megnövelt valószínűséggel egy táblázatban:}
-
-\textbf{Eredmények:} 
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
-\textbf{Z(n,m)} & \textbf{Mohó} & \textbf{MT - mohó} & \textbf{MT} & \textbf{MT + jav.} & \textbf{MT + C4 jav.} & \textbf{MT + C4 jav. törlés} \\
-\hline
-$Z(20,20)$ & 90 & 90 & 90 & 90 & 90 & 90 \\
-$Z(30,30)$ & 150 & 150 & 150 & 150 & 150 & 150 \\
-$Z(40,40)$ & 200 & 200 & 200 & 200 & 200 & 200 \\
-$Z(14,29)$ & 85 & 85 & 85 & 85 & 85 & 85 \\
-$Z(9,30)$  & 75 & 75 & 75 & 75 & 75 & 75 \\
-$Z(20,37)$ & 116 & 116 & 116 & 116 & 116 & 116 \\
-\hline
-Él \% & 50\% & 50\% & 50\% & 50\% & 50\% & 50\% \\
-\hline
-\end{tabular}
-\caption{Különböző algoritmusok $Z(n,m)$ értékeinek összehasonlítása}
-\end{table}
-
-\subsection*{6. Több iteráció futtatása}
+\subsection*{5. Több iteráció futtatása}
 \textbf{Algoritmus:}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \begin{algorithmic}[1]
     \State ...
     \For{belső iterációszám}
@@ -280,21 +306,27 @@ $Z(20,37)$ & 116 & 116 & 116 & 116 & 116 & 116 \\
 
 \textbf{Motiváció:} A legtöbb $C_4$-ben szereplő élek eltávolítására épülő változat célja, hogy kevesebb él törlésével szüntesse meg a $C_4$-eket, miközben megőrzi a gráf kiegyensúlyozott szerkezetét. Ha a gráf egy része már eleve kiegyensúlyozott, akkor az új élek hozzáadása nem, vagy csak minimálisan ront a szerkezeten. Ezzel szemben, ha egy részgráf erősen aszimmetrikus, akkor az új élek beszúrása és a későbbi célzott törlések javíthatják annak struktúráját. Így a folyamat végeredményeként a teljes gráf kiegyensúlyozottabbá válik, ami nagyobb élhalmazt, azaz több megtartható élt eredményezhet.
 
-\textbf{Eredmények:}
+\textbf{Eredmények (!!Lehetne egybe a felette lévővel!!):}
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{MT C4.jav + iter} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
-$Z(14, 29)$ & 85 & 85 \\
-$Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
-$Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(9,30)$  & 62 \\
+$Z(14, 29)$ & 84 \\
+$Z(20, 20)$ & 87 \\
+$Z(20, 37)$ & 130 \\
+$Z(30, 30)$ & 151 \\
+$Z(40, 40)$ & 224 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 92.96\% \\
+\hline
+Diff & 36 60 37 \\
+\hline
+Futásidő & 1846s \\
+Iteráció & 120 \\
+Belső Iteráció & 20 \\
 \hline
 \end{tabular}
 \end{table}
@@ -333,16 +365,22 @@ Megjegyzés: Látni lehet, hogy több iteráció futtatása igazán a dinamikusa
 \centering
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{Dinamikus} & \textbf{Dinamikus + iter} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
-$Z(14, 29)$ & 85 & 85 \\
-$Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
-$Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(9,30)$  & 63 & 63 \\
+$Z(14, 29)$ & 86 & 86 \\
+$Z(20, 20)$ & 88 & 93 \\
+$Z(20, 37)$ & 131 & 132 \\
+$Z(30, 30)$ & 153 & 153 \\
+$Z(40, 40)$ & 223 & 225 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 93.35\% & 94.54\% \\
+\hline
+Diff & 87 38 37 & 133 33 40 \\
+\hline
+Futásidő & 1724s & 1867s \\
+Iteráció & 5300 & 1000 \\
+Belső Iteráció & - & 20 \\
 \hline
 \end{tabular}
 \end{table}

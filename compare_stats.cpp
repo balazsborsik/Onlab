@@ -30,6 +30,25 @@ vector<vector<int>> readMatrix(const string& filename) {
     return matrix;
 }
 
+void print_exec_time(const string& name, ostream& out=cout){
+    string::size_type pos = name.find_last_of('\\');
+    if (pos != std::string::npos)
+    {
+        string filename = name.substr(0, pos)+"\\exec_time.txt";
+        ifstream file(filename);
+        string line;
+
+        if (!file) {
+            cerr << "Error opening file: " << filename << endl;
+            exit(1);
+        }
+        while (getline(file, line)) {
+            out<<line<<endl;
+        }
+        file.close();
+    }
+}
+
 void compare_to_best(int min, int max, const string& name1, const string& name2, const vector<vector<int>>& matrix1, const vector<vector<int>>& matrix2, ostream& out=cout){
     int num0=0;
     int num1=0;
@@ -59,13 +78,13 @@ void print_special_values(int min, int max, const string& name1, const string& n
     cout << "Z(30,30): " << matrix1[29][29] << endl;
     cout << "Z(40,40): " << matrix1[39][39] << endl;
 
-    cout << endl << name2 << ":\n";
+    /*cout << endl << name2 << ":\n";
     cout << "Z(9,30): " << matrix2[29][8] << endl;
     cout << "Z(14,29): " << matrix2[28][13] << endl;
     cout << "Z(20,20): " << matrix2[19][19] << endl;
     cout << "Z(20,37): " << matrix2[36][19] << endl;
     cout << "Z(30,30): " << matrix2[29][29] << endl;
-    cout << "Z(40,40): " << matrix2[39][39] << endl;
+    cout << "Z(40,40): " << matrix2[39][39] << endl;*/
 }
 
 void compare_edgenum(int min, int max, const string& name1, const string& name2, const vector<vector<int>>& matrix1, const vector<vector<int>>& matrix2, ostream& out=cout){
@@ -96,7 +115,6 @@ int main(int argc, char* argv[]) {
         cerr << "Usage: " << argv[0] << " <input1.txt> <input2.txt> [<min size> <max size>]" << endl;
         return 1;
     }
-    cout << argc <<endl;
     int min = 2;
     int max = 40;
     if(argc==5){
@@ -121,6 +139,7 @@ int main(int argc, char* argv[]) {
     print_special_values(min, max, argv[1], argv[2], matrix1, matrix2);
     cout << endl << "Some stats:" << endl;
     compare_to_best(min, max, argv[1], argv[2], matrix1, matrix2);
-
+    cout << endl;
+    print_exec_time(argv[1]);
     return 0;
 }

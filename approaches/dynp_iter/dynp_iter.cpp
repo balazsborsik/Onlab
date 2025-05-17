@@ -247,7 +247,7 @@ void reflip_circle(vector<c4>& new_circles, const vector<vector<int>> &edges_in_
 void run_with_p(vector<vector<int>>& adj, dynp &dyn_p, int m, int n){
     vector<c4> circles;
     vector<vector<int>> edges_in_circles(m, vector<int>(n, 0));
-    for(int itr=0; itr<200;itr++){
+    for(int itr=0; itr<20;itr++){
         for (int u = 0; u < m; ++u){
             for (int v = 0; v < n; ++v){
                 if(dyn_p.get_p(u,v)>((double)rand()/(double)RAND_MAX)){
@@ -286,10 +286,10 @@ int main() {
     cout << "Enter number of vertices on side V (n): ";
     cin >> n;*/
     
-    vector<vector<int>> results(29, vector<int>(29,0));
+    vector<vector<int>> results(39, vector<int>(39,0));
     vector<pair<int,int>> n_mqueue;
-    for(int firstcord=2;firstcord<=30;firstcord++){
-        for (int secondcord = firstcord; secondcord <= 30; secondcord++)
+    for(int firstcord=2;firstcord<=40;firstcord++){
+        for (int secondcord = firstcord; secondcord <= 40; secondcord++)
         {
             n_mqueue.emplace_back(firstcord,secondcord);
         }
@@ -345,7 +345,7 @@ int main() {
         stats.print(logfile);
         //logfile<<endl;
         ///logfile<<" p: "<<p<<";"<<endl;
-        logfile<<" iter: "<<200<<";"<<endl;
+        logfile<<" iter: "<<20<<";"<<endl;
         logfile.close();
 
         stringstream str;

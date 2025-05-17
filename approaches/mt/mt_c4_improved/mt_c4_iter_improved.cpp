@@ -256,18 +256,17 @@ int main() {
         int m=n_mqueue[iters].first;
         int n=n_mqueue[iters].second;
         cout<<m<<", "<<n<<endl;
-        int iterations = 120;  // Number of trials
+        int iterations = 450;  // Number of trials
         int maxEdges = 0;       // Best lower bound found
         logs stats;
         stats.startTimer();
         vector<vector<int>> graph(m, vector<int>(n, 0));
-
         vector<pair<int, int>> edges;
         for (int u = 0; u < m; ++u)
                 for (int v = 0; v < n; ++v)
                     edges.emplace_back(u, v);
-        double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
-        //double p=calculate_p_from_LLL(n,m);
+        //double p=((double)upperBound(2,2,n,m)/(n*m))*0.85;
+        double p=calculate_p_from_LLL(n,m);
         for (int iter = 0; iter < iterations; ++iter) {
             vector<vector<int>> adj(m, vector<int>(n, 0));
 
@@ -297,7 +296,7 @@ int main() {
         }
 
         ofstream logfile;
-        logfile.open("MT_ITER_IMPROVED_log.txt", std::ios_base::app);
+        logfile.open("MT_ITER_IMPROVED_LLL_log.txt", std::ios_base::app);
         logfile<<"Z(" << m << ", " << n << "; 2, 2): ";
         stats.print(logfile);
         logfile<<endl;
@@ -314,7 +313,7 @@ int main() {
     }
 
     stringstream str;
-    str<<"MT_ITER_IMPROVED_results.txt";
+    str<<"MT_ITER_IMPROVED_LLL_results.txt";
     ofstream resfile (str.str());
     print_graph( results, resfile);
     resfile.close();
@@ -327,7 +326,7 @@ int main() {
 
     ofstream logfile;
     logfile.open("exec_time.txt", std::ios_base::app);
-    logfile<<"MT_ITER_IMPROVED: "<<duration<<"seconds\n";
+    logfile<<"MT_ITER_IMPROVED_LLL: "<<duration<<"seconds\n";
     logfile.close();
 
     return 0;
