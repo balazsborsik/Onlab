@@ -285,6 +285,7 @@ void forward(int n_n, int m_m){
     vector<vector<vector<vector<int>>>> graphs(41, vector<vector<vector<int>>>(41, vector<vector<int>>(0, vector<int>(0, 0))));
     graphs[m][n] = create_from_file(m,n,readBestGraph(m,n));
     vector<vector<int>> done(41, vector<int>(41, 0));
+    vector<vector<pair<int, int>>> parent(41, vector<pair<int, int>>(41, {0,0}));
     while(!n_m_queue.empty()){
         m=n_m_queue.front().first;
         n=n_m_queue.front().second;
@@ -306,6 +307,7 @@ void forward(int n_n, int m_m){
             if(edges_needed<edges_added)
                 cout<<"M_Nagy a baj!"<<m<<", "<<n<<endl;
             n_m_queue.emplace(m+1,n);
+            parent[m+1][n]= {m,n};
             graphs[m+1][n]=graph_m;
         }}
 
@@ -317,6 +319,7 @@ void forward(int n_n, int m_m){
             if(edges_needed<edges_added)
                 cout<<"N_Nagy a baj!"<<m<<", "<<n<<endl;
             n_m_queue.emplace(m,n+1);
+            parent[m][n+1]= {m,n};
             graphs[m][n+1]=graph_n;
         }
     }
@@ -325,6 +328,14 @@ void forward(int n_n, int m_m){
             cout<<elm2<<" ";
         }
         cout<<endl;
+    }
+    cout<<endl<<"13,16: "<<endl;
+    int _n=16, _m=13;
+    while(parent[_m][_n].first){
+        cout<<"("<<_m<<","<<_n<<")"<<endl;
+        auto par= parent[_m][_n];
+        _m=par.first;
+        _n=par.second;
     }
 }
 
