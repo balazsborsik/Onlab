@@ -12,6 +12,9 @@
 \usepackage{enumitem}
 \usepackage{bm}
 \usepackage{caption}
+\usepackage{graphicx}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{references.bib}
  \geometry{ a4paper, textwidth=180mm, textheight=257mm, left=15mm, top=20mm, bottom=25mm}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -48,7 +51,7 @@ Témavezető: Dr.Héger Tamás
     \item \bm{$K_{n,m}$}: Egy $(N,M,E)$ teljes páros gráf, ahol $|N|=n$, $|M|=m$ és bármely $u \in N$ és $v \in M$ között van él behúzva.
     \item \bm{$C_4$}: $K_{2,2}$
     \item \textbf{Páros gráf mátrixos ábrázolása}: A dokumentumban a \emph{gráf} kifejezés mindig páros gráfokra utal, még abban az esetben is, ha ez nincs külön kihangsúlyozva. Egy $(N, M, E)$ páros gráfhoz gyakran hozzárendeljük a hozzá tartozó szomszédsági mátrixot, melynek mérete $|N| \times |M|$. Ebben a megfeleltetésben a mátrix $n$-edik sora egy $N$-beli csúcsot, az $m$-edik oszlopa pedig egy $M$-beli csúcsot reprezentál. A két csúcs között akkor van él, ha a szomszédsági mátrix $(n,m)$ pozíciójában $1$ található; ha pedig $0$, akkor nincs él a két csúcs között.
-    \item \textbf{Zarankiewicz-szám:} Egy $G = (A,B;E)$ páros gráf $K_{s,t}$-mentes, ha nem tartalmaz olyan $s$ csúcsot $A$-ban és $t$ csúcsot $B$-ben, amelyek egy $K_{s,t}$-vel izomorf részgráfot alkotnak. Az $(m,n)$ méretű $K_{s,t}$-mentes páros gráf éleinek maximális számát $Z_{s,t}(m,n)$-nel jelöljük, és Zarankiewicz-számnak nevezzük. A dokumentumban amennyiben $s,t$ nincs jelölve, akkor $Z(m,n)$ ekvivalens $Z_{s,t}(m,n)$-nel.
+    \item \textbf{Zarankiewicz-szám:} Egy $G = (A,B;E)$ páros gráf $K_{s,t}$-mentes, ha nem tartalmaz olyan $s$ csúcsot $A$-ban és $t$ csúcsot $B$-ben, amelyek egy $K_{s,t}$-vel izomorf részgráfot alkotnak. Az $(m,n)$ méretű $K_{s,t}$-mentes páros gráf éleinek maximális számát $Z_{s,t}(m,n)$-nel jelöljük, és Zarankiewicz-számnak nevezzük. A dokumentumban amennyiben $s,t$ nincs jelölve, akkor $Z(m,n)$ ekvivalens $Z_{s,t}(m,n)$-nel. \cite{goddard2002zarankiewicz}
     \item \textbf{Zarankiewicz-probléma (eredeti megfogalmazás):} Vegyünk egy $n \times m$-es mátrixot, amely csak 0 és 1 értékeket tartalmaz. Legkevesebb hány darab 1-es szükséges, hogy mindenképp tartalmazzon $s \times t$-es csupa 1-es részmátrixot? Ez a definíció megegyezik $Z_{s,t}(m,n) + 1$ -el (ez a fent bemutatott mátrixos áttérés után rögtön látszik).
     \item Egy $C_4$ mentes gráf \textbf{triviálisan kiegészíthető}, ha létezik olyan még nem behúzott él, melynek behúzása után nem keletkezik $C_4$.
 \end{itemize}
@@ -109,7 +112,7 @@ Az önálló labor célja a random konstrukciókkal kapott alsó becslések vizs
     
     Például egy $q$ rendű projektív sík egy $2-(q^2 + q + 1, q + 1, 1)$ design.
     \\[5mm]
-    \noindent Forrás: \textit{Damásdi, G., Héger, T. and Szőnyi, T., 2013. The Zarankiewicz problem, cages and geometries.}
+    \noindent Forrás: \textit{Damásdi, G., Héger, T. and Szőnyi, T., 2013. The Zarankiewicz problem, cages and geometries.} \cite{damasdi2013zarankiewicz}
 \end{itemize}
 
 \section*{4. Felső becslések bemutatása}
@@ -164,12 +167,24 @@ Az $a$ és $c$ behelyettesítésével megkapjuk az állított egyenlőtlenséget
 \[
 e(G) \leq \frac{t - 1}{\binom{p}{s - 1}} \binom{m}{s} + n \cdot \frac{(p + 1)(s - 1)}{s}.
 \]
+\\[5mm]
+\noindent Források: \textit{STEVEN ROMAN, 1974. A Problem of Zarankiewicz} \cite{roman1974zarankiewicz}
+
+\noindent \textit{Damásdi, G., Héger, T. and Szőnyi, T., 2013. The Zarankiewicz problem, cages and geometries.} \cite{damasdi2013zarankiewicz}
 
 \section*{Programváltozatok}
 
 \textbf{Program alapja:} A program minden változata \texttt{C++} nyelven készült. A gráfokat szomszédsági mátrixban tároljuk, mivel a vizsgált intervallumban a használt algoritmusokkal ez a módszer gyorsabbnak bizonyult az éllistás tárolásnál.
 \\[2mm]
-\noindent \textbf{Eredmények táblázat jelölései:} Az eredmény táblázatban pár különböző méretű, n,m máretű Z(n,m) szolgál a módszer bemutatására. Továbbá még kettő mérőszám mindkét márőszám csak a Z(10,10) től Z(40,40)-ig tartó eredményekből dolgozik, hogy a módszereket ne torzítsák a 10,10 alatti könnyen megtalálható esetek. Az \emph{Él \%} a legjobb általunk talált eredményekkel veti össze az intervallumon a módszert, úgy, hogy összeadja az intervallumon belül talált legjobb gráfok éleit és az így kapott élszámot leosztja, a legjobb eredmények összélszámával. A \emph{Diff} azt mutatja meg, hogy hányszor adott a módszer teljesen/egy híján/két híján pontos értékeket, az alábbi formátumban : <pontos> <pontos -1> < pontos - 2>. (A 10-40 intervallumban összesen 496 vizsgált eset van)
+\noindent \textbf{Eredmények táblázat jelölései:} 
+Az eredménytáblázatban néhány különböző méretű, $n \times m$ méretű $Z(n, m)$ probléma szerepel a módszer bemutatására. Emellett két mérőszám is szerepel az értékeléshez, melyek kizárólag a $Z(10,10)$ és $Z(40,40)$ közötti méretekből számolódnak, hogy elkerüljük a kisebb, könnyebben megoldható esetek torzító hatását.
+
+Az \textbf{Él \%} azt mutatja meg, hogy az adott módszer az intervallumon belül mennyire közelíti meg a legjobb általunk ismert eredményeket. Ehhez az adott módszer által talált legjobb gráfok élszámait összeadjuk, majd elosztjuk az intervallumban ismert legjobb eredmények élszámainak összegével.
+
+A \textbf{Diff} azt mutatja, hogy a módszer hányszor adott pontos, egy híján, vagy két híján pontos megoldást az alábbi formátumban: \texttt{<pontos> <pontos-1> <pontos-2>}. A $Z(10,10)$ és $Z(40,40)$ közötti intervallumban összesen 496 vizsgált eset szerepel.
+
+
+
 
 \subsection*{1. Mohó algoritmus}
 \textbf{Algoritmus:} Véletlen sorrendben végig megyünk az összes élen, ha egy él behúzása $C_4$-et hozna létre, akkor nem húzzuk be, különben behúzzuk. (Így a kapott gráf biztos, hogy triviálisan nem kiegészíthető, hiszen, ha az lenne, akkor a behúzható élt már behúztuk volna, amikor az algoritmus során vizsgáljuk.)
@@ -202,7 +217,98 @@ Iteráció & 18000 \\
 
 \subsection*{2. Moser-Tardos}
 
-\textbf{Algoritmus:} Végig megyünk az éleken, és minden élt az LLL-ből kiszámolt valószínűséggel behúzunk, közben számon tartjuk a kisebbik/nagyobbik (még nem eldöntött, meg kell nézni mindkettőt!) csúcsosztályban az összes csúcspár közös szomszédjainak számát. Ha egy $(u,v)$ él behúzásra kerül, akkor az összes olyan $(u,u')$ csúcspár közös szomszédjainak számát növeljük eggyel, ahol $u'$ szomszédos $v$-vel. Ezután végigmegyünk minden csúcspáron, és ha a közös szomszédaik száma $\geq 2$, akkor újrasorsoljuk a csúcspár összes élét. Ezt addig ismételgetjük, amíg van olyan csúcspár, ahol a közös szomszédok száma $\geq 2$. (Triviális javítás a mohó algoritmus használata a folyamat vége után, ennek eredményeiről lentebb.)
+\subsubsection*{Moser Tardos módszer:}
+\textbf{Definíció} Legyenek $E_1, E_2, \ldots, E_n$ események egy valószínűségi térből.  
+    A $G$ gráfot \emph{függetlenségi gráfnak} nevezzük, ha csúcshalmaza $\{1, 2, \ldots, n\}$, és minden $i$-re az $E_i$ esemény teljesen független az 
+    \[
+    \{ E_j : j \ne i,\ (j, i) \notin E(G) \}
+    \]
+    események halmazától.
+    
+    
+    \noindent \textbf{Tétel (LLL (Lovász lokális lemma) egy változata):} Legyenek $E_1, \dots, E_n$ események egy valószínűségi térben, $G$ legyen egy függetlenségi gráf, $d \geq 1$, és teljesüljön:
+    \begin{itemize}
+        \item $\mathbb{P}(E_i) \leq p$ minden $i$-re,
+        \item $G$-ben a csúcsok foka legfeljebb $d$,
+        \item $4dp \leq 1$.
+    \end{itemize}
+    Ekkor $\mathbb{P}\left( \bigcap_{i=1}^n \overline{E_i} \right) > 0$.
+    \\[2mm]
+    \textbf{Moser-Tardos algoritmus:}
+    \begin{enumerate}
+        \item Kiértékeljük a $\xi \in \mathcal{P}$ változókat egy véletlen $\omega \in \Omega$ helyen. Ha egyik $E_i$ sem következik be, akkor $\omega$ egy elemi esemény a $\bigcap_{i=1}^n \overline{E_i}$ metszetből, és az eljárás véget ér.
+        \item Ha valamelyik $E_j$ bekövetkezett, akkor újra kiértékeljük a $P_j$-beli $\xi$ változókat a saját eloszlásuk szerint, függetlenül. A $P \setminus P_j$ változókat változatlanul hagyjuk. Ezután ismét ellenőrizzük, hogy bekövetkezik-e valamelyik $E_i$, és szükség esetén ismételjük a 2. lépést.
+    \end{enumerate}
+
+    \noindent \textit{Megjegyzés:} Moser és Tardos bizonyították, hogy a 2. lépést várhatóan legfeljebb $\frac{n}{d-1}$ alkalommal kell elvégezni.
+    \\[5mm]
+    \noindent Forrás: \textit{Rónyai Lajos Véletlen és algoritmusok 2011} \cite{ronyai2011veletlen}
+    \\[5mm]
+    \textbf{Programváltozatok:}
+    \begin{enumerate}
+        \item $E_i$ esemény: Egy csúcsosztályban két csúcsnak van két közös szomszédja.
+        \item $E_i$ esemény: $C_4$ képződik.\\
+        A $G$ függetlenségi gráfban a csúcsok foka:
+
+        \[
+        d = \binom{m}{2} \binom{n}{2} 
+        - \left( 
+        \binom{m-2}{2} \binom{n}{2} 
+        + 2 \binom{m-2}{1} \binom{n-2}{2} 
+        + \binom{n-2}{2} 
+        \right) - 1
+        \]
+        
+        \[
+        4dp \leq 1
+        \]
+Mivel egy $C_4$-et négy él behúzásával kapunk, ezért:
+        \[
+         p = \varepsilon^4
+        \]
+        \[
+        \varepsilon^4 \leq \frac{1}{4d}
+        \]
+        \[
+        \varepsilon = \left( \frac{1}{4d} \right)^{1/4}
+        \]
+    \end{enumerate}
+
+    A $p$ (élbehúzási valószínűség) értéke kezdetben az LLL alapján lett megválasztva. Később, mivel $p$ növelése jobb eredményeket adott hasonló futásidő mellett, ezért a prezentált eredményekben:
+    \begin{itemize}
+        \item Az 1. esetben $p$ a Roman-féle felső becslés szerinti várható érték 80\%-a.
+        \item A 2. esetben 85\%-a.
+    \end{itemize}
+
+\textbf{Algoritmus:} Végig megyünk az éleken, és minden élt az LLL-ből kiszámolt valószínűséggel behúzunk, közben számon tartjuk a kisebbik/nagyobbik csúcsosztályban az összes csúcspár közös szomszédjainak számát. Ha egy $(u,v)$ él behúzásra kerül, akkor az összes olyan $(u,u')$ csúcspár közös szomszédjainak számát növeljük eggyel, ahol $u'$ szomszédos $v$-vel. Ezután végigmegyünk minden csúcspáron, és ha a közös szomszédaik száma $\geq 2$, akkor újrasorsoljuk a csúcspár összes élét. Ezt addig ismételgetjük, amíg van olyan csúcspár, ahol a közös szomszédok száma $\geq 2$. (Triviális javítás a mohó algoritmus használata a folyamat vége után, ennek eredményeiről lentebb.)
+
+\textbf{LLL-ből számolt valószínűség:} $E_i$ esemény: $C_4$ képződik.\\
+        A $G$ függetlenségi gráfban a csúcsok foka:
+
+        \[
+        d = \binom{m}{2} \binom{n}{2} 
+        - \left( 
+        \binom{m-2}{2} \binom{n}{2} 
+        + 2 \binom{m-2}{1} \binom{n-2}{2} 
+        + \binom{n-2}{2} 
+        \right) - 1
+        \]
+        
+        \[
+        4dp \leq 1
+        \]
+Mivel egy $C_4$-et négy él behúzásával kapunk, ezért:
+        \[
+         p = \varepsilon^4
+        \]
+        \[
+        \varepsilon^4 \leq \frac{1}{4d}
+        \]
+        \[
+        \varepsilon = \left( \frac{1}{4d} \right)^{1/4}=\text{élbehúzási valószínűség}
+        \]
+
+    A $p$ (élbehúzási valószínűség) értéke kezdetben az LLL alapján lett megválasztva. Később, $p$-t növeltük jobb eredmények reményében.
 
 \textbf{Motiváció:} A Moser-Tardos módszer jól ráillik a problémára és az újrasorsolások által pont két csúcs közös szomszédjait javítja ki, és ahol a gráf már $C_4$-mentes, azt kevésbé változtatja meg. Ezért ez a célzott javítgatás jobb eredményekre ad reményt.
 
@@ -232,7 +338,7 @@ Iteráció & 8000 & 8000 & 6000 & 8000 \\
 
 \subsection*{3. Moser-Tardos javítása}
 
-\textbf{Algoritmus:} Végig megyünk az éleken, és minden élt az LLL-ből kiszámolt valószínűséggel behúzunk, közben számon tartjuk a keletkezett $C_4$-eket. Ezután végigmegyünk minden $C_4$-en és újrasorsoljuk az összes élét. Ezt addig ismételgetjük, amíg van $C_4$. (Triviális javítás a mohó algoritmus használata a folyamat vége után.)
+\textbf{Algoritmus:} Végig megyünk az éleken, és minden élt az LLL-ből kiszámolt valószínűséggel behúzunk, közben számon tartjuk a keletkezett $C_4$-eket. Ezután végigmegyünk minden $C_4$-en és újrasorsoljuk az összes élét. Ezt addig ismételgetjük, amíg van $C_4$. Mohó javítás nélkül sajnos nem hozott jó eredményeket ez a módszer sem, így ezután a mohó javítás minden programváltozatban jelen lesz.
 
 \textbf{Motiváció:} A Moser-Tardos módszer jól ráillik a problémára és az újrasorsolások által pont $C_4$-eket javítja ki, és ahol a gráf már $C_4$-mentes, azt kevésbé változtatja meg. Ezért ez a célzott javítgatás jobb eredményekre ad reményt.
 
@@ -241,7 +347,7 @@ Iteráció & 8000 & 8000 & 6000 & 8000 \\
 \centering
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{MT C4 + mohó} & \textbf{MT C4 + LLL + Mohó} \\
+\textbf{Z(n, m)} & \textbf{MT C4 + mohó} & \textbf{MT C4 + LLL + mohó} \\
 \hline
 $Z(9,30)$  & 63 & 72 \\
 $Z(14, 29)$ & 85 & 85 \\
@@ -270,7 +376,7 @@ Iteráció & 13000 & 15000 \\
 \centering
 \begin{tabular}{|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{MT C4 IMPROVED} \\
+\textbf{Z(n, m)} & \textbf{MT C4 jav.} \\
 \hline
 $Z(9,30)$  & 63 \\
 $Z(14, 29)$ & 85 \\
@@ -312,7 +418,7 @@ Iteráció & 11000 \\
 \centering
 \begin{tabular}{|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{MT C4.jav + iter} \\
+\textbf{Z(n, m)} & \textbf{MT C4 jav. + iter} \\
 \hline
 $Z(9,30)$  & 62 \\
 $Z(14, 29)$ & 84 \\
@@ -332,7 +438,7 @@ Belső Iteráció & 20 \\
 \end{tabular}
 \end{table}
 
-\subsection*{7. Dinamikusan karbantartott valószínűségek}
+\subsection*{6. Dinamikusan karbantartott valószínűségek}
 \textbf{Algoritmus:} Kísérletezés után a legjobb alsó korlátokat az alábbi módszer adta, a valószínűségek számítása az alábbi
 képlet alapján történt:
 \begin{algorithm}[H]
@@ -391,21 +497,27 @@ Belső Iteráció & - & 20 \\
 \textbf{1. Csak a nagyobb csúcsosztály fokszámainak figyelembevétele:} A Roman becslés is csak a nagyobbik osztály fokszámait használja, a kisebbik osztály fokszámai nincsenek figyelembe véve.\\
 \textbf{2. Valószínűségek fixálása minden iterációnál:} Iterációk előtt a valószínűségek fixálása úgy, hogy a behúzott élek várható száma a felső becslés adott százaléka legyen. Így például, ha a felső becslés 100\%-ára állítjuk be a várható értéket, akkor törlések előtt a gráf élszámának várható értéke minden iteráció után a felső becslés lesz, aminél több élt úgysem húzhatnánk be a gráfba.
 
-\textbf{Eredmények:}
+\textbf{Eredmények:(!!Lehetne egybe a felette lévővel!!)}
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Z(n, m)} & \textbf{Alap módszer} & \textbf{Mohó javítással} \\
+\textbf{Z(n, m)} & \textbf{Egy oldal} & \textbf{Fixált} \\
 \hline
-$Z(9,30)$  & 75 & 75 \\
-$Z(14, 29)$ & 85 & 85 \\
+$Z(9,30)$  & 62 & 63 \\
+$Z(14, 29)$ & 86 & 86 \\
 $Z(20, 20)$ & 90 & 90 \\
-$Z(20, 37)$ & 116 & 116 \\
-$Z(30, 30)$ & 150 & 150 \\
-$Z(40, 40)$ & 200 & 200 \\
+$Z(20, 37)$ & 131 & 130 \\
+$Z(30, 30)$ & 152 & 152 \\
+$Z(40, 40)$ & 224 & 224 \\
 \hline
-Él \% & 50\% & 50\% \\
+Él \% & 93.77\% & 94.3\% \\
+\hline
+Diff & 92 47 37 & 112 46 35 \\
+\hline
+Futásidő & 1689s & 1800s \\
+Iteráció & 900 & 1500 \\
+Belső Iteráció & 30 & 20 \\
 \hline
 \end{tabular}
 \end{table}
@@ -424,16 +536,73 @@ Z(m-1, n) \geq |E(G)| - \delta(A),
 Z(m, n-1) \geq |E(G)| - \delta(B).
 \]
 \end{quote}
-Az állítás magától értetődő, ami viszont meglepő lehet, hogy sok esetben a bemutatott becslés használata elég a felső korlát eléréséhez. Ezt jól szemlélteti, hogy a $Z(13, 18)$-tól egészen $Z(3, 3)$-ig el lehet jutni ezzel az egy becsléssel, úgy hogy közben csak pontos értéken haladsz át. "Nem teljesen igaz meg kell csinálni rendesen, az elvétellel kapott gráf adja az inputot"
+Az állítás magától értetődő, ami viszont meglepő lehet, hogy sok esetben a bemutatott becslés használata elég a felső korlát eléréséhez. Ezt jól szemlélteti, hogy a $Z(13, 16)$-tól egészen $Z(3, 3)$-ig el lehet jutni ezzel az egy becsléssel, úgy hogy közben csak pontos értéken haladsz át. "Legyen-e valamilyen kép? Ez itt az elérhető értékek így"
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{zarankep.png}
+    \caption{3,3-13,16}
+    \label{fig:your_label}
+\end{figure}
+
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Eredeti} & \textbf{Fixált} \\
+\hline
+$Z(9,30)$  & 63 & 63 \\
+$Z(14, 29)$ & 87 & 87 \\
+$Z(20, 20)$ & 96 & 96 \\
+$Z(20, 37)$ & 135 & 135 \\
+$Z(30, 30)$ & 175 & 175 \\
+$Z(40, 40)$ & 247 & 248 \\
+\hline
+Él \% & 99.5\% & 99.3\% \\
+\hline
+Diff & 342 77 42 & 277 106 53 \\
+\hline
+Futásidő & 1709s & 1713s \\
+Iteráció & 1600 & 1600 \\
+Belső Iteráció & [1,3,6,12] & [1,3,6,12] \\
+\hline
+\end{tabular}
+\end{table}
 
 \subsection*{9. Öt eddigi legjobb gráf felhasználása bemenetként}
 \textbf{Algoritmus:} Ugyanaz, mint az előző algoritmus, csak minden iterációban az eddigi legjobb öt kiinduló gráfot olvasunk be, és mindegyikből lefuttatjuk az algoritmust. Továbbá ebben a változatban nem csak a legjobb, hanem az öt legjobb gráfot mentjük el.
 
-\textbf{Motiváció:} Mi történik, hogyha $Z(m,n)$ és $Z(m,n+1)$ struktúrája lényegesen eltérő. Az eredeti kiegészítős módszerrel, ekkor hiába találjuk $(m,n)$-re az optimális gráfot a $(m,n+1)$-hez használt kiinduló gráfon nagyon sok módosítást kéne végeznünk, nem is biztos, hogy jól járunk a kiinduló gráfunkkal. Öt, élszámra már $Z(m,n)$-hez egészen közel lévő, strukturájukban különböző gráf használatával sokkal nagyobb az esélyünk, hogy megtaláljuk az ilyen eseteket.
+\textbf{Motiváció:} Mi történik, hogyha $Z(m,n)$ és $Z(m,n+1)$ struktúrája lényegesen eltérő. Az eredeti kiegészítős módszerrel, ekkor hiába találjuk $(m,n)$-re az optimális gráfot a $(m,n+1)$-hez használt kiinduló gráfon nagyon sok módosítást kéne végeznünk, nem is biztos, hogy jól járunk a kiinduló gráfunkkal. Öt, élszámra már $Z(m,n)$-hez egészen közel lévő, strukturájukban különböző gráf használatával sokkal nagyobb az esélyünk, hogy megtaláljuk az ilyen eseteket. (Megjegyzés: az iteráció számnál figyelembe kell venni, hogy iterációnként öt gráf feldolgozása történik)
 
-\subsection*{Végső táblázat, értékelés}
+\textbf{Eredmények:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Z(n, m)} & \textbf{Eredeti} & \textbf{Fixált} \\
+\hline
+$Z(9,30)$  & 63 & 63 \\
+$Z(14, 29)$ & 87 & 87 \\
+$Z(20, 20)$ & 96 & 96 \\
+$Z(20, 37)$ & 134 & 134 \\
+$Z(30, 30)$ & 175 & 166 \\
+$Z(40, 40)$ & 247 & 248 \\
+\hline
+Él \% & 99.43\% & 99\% \\
+\hline
+Diff & 319 83 50 & 245 87 66 \\
+\hline
+Futásidő & 1824s & 1713s \\
+Iteráció & 320 & 360 \\
+Belső Iteráció & [1,3,6,12] & [1,3,6,12] \\
+\hline
+\end{tabular}
+\end{table}
 
-A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz(majd felette mindenhol pontos iterációszám és paraméterek). A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan.A minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
+\section*{Végső táblázat, értékelés}
+
+A módszer már egy órányi futtatás után is közel kerül a jelenleg ismert felső korlátokhoz. A végső eredményeket a \textbf{top 5-ös módszer} többszöri, hosszú futtatása adta, továbbá ennek egy kicsit módosított változata, mivel nem minden gráf struktúrája ugyanolyan.A minimum és maximum fokszám az optimumban bizonyos esetekben nagyon távol lehet egymástól. A Roman becslés, és a bemutatott és használt dinamikus valószínűségi logika is a teljesen egyenletes fokszámeloszlást veszi alapul, ezért azoknak az eseteknek a megtalálása kevésbé valószínű a fenti módszerrel.
 Emiatt egy kicsit módosított valószínűségi logikával futó kód jobb eredményeket produkált, azokban az esetekben, ahol a gráf optimális fokszámai erősen aszimmetrikusak.
 
 \textbf{Módosított logika:} Minden élhez futtatás előtt random eltérítési értéket generálunk, amely pozitív vagy negatív irányba módosítja az élbehúzási valószínűséget. Ez növeli az esélyt az aszimmetrikus, de optimális struktúrák megtalálására.
@@ -460,8 +629,8 @@ $m \backslash n$ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 &
 13 &   &   &   &   &   &   &   &   &   &   &   & 52 & 53 & 55 & 57 & 59 & 61 & 64 & 66 & 67 & 69 & 71 & 73 & 75 & 78 & 79 & 81 & 82 & 84 & 85 & 87 & 88 & 90 & 91 & 93 & 94 & 96 & 97 & 99 \\
 14 &   &   &   &   &   &   &   &   &   &   &   &   & 56 & 58 & 60 & 63 & 65 & 68 & 70 & 72 & 73 & 75 & 78 & 80 & 82 & 84 & 85 & 87 & 89 & 91 & 92 & 94 & 96 & 98 & 99 & 101 & 102 & 104 & 105 \\
 15 &   &   &   &   &   &   &   &   &   &   &   &   &   & 61 & 64 & 67 & 69 & 72 & 75 & 77 & 78 & 80 & 82 & 85 & 86 & 88 & 90 & 92 & 95 & 96 & 98 & 100 & 102 & 105 & 106 & 108 & 109 & 111 & 112 \\
-16 &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 67 & 70 & 73 & 76 & 80 & 81 & 83 & 85 & 87 & 90 & 91 & 93 & 95 & 97 & 100 & 101 & 103 & 106 & 108 & 110 & 111 & 113 & 115 & 117 & 118 \\
-17 &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 74 & 77 & 80 & 84 & 85 & 87 & 89 & 91 & 94 & 96 & 98 & 100 & 102 & 105 & 107 & 109 & 111 & 113 & 115 & 117 & 119 & 121 & 123 & 125 \\
+16 &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 67 & 70 & 73 & 76 & 80 & 81 & 83 & 85 & 87 & 90 & 91 & 93 & 95 & 97 & 100 & 102 & 103 & 106 & 108 & 110 & 111 & 113 & 115 & 117 & 118 \\
+17 &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 74 & 77 & 80 & 84 & 85 & 87 & 89 & 91 & 94 & 96 & 98 & 101 & 102 & 105 & 107 & 109 & 111 & 113 & 115 & 117 & 119 & 121 & 123 & 125 \\
 18 &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 81 & 84 & 88 & 90 & 91 & 93 & 96 & 99 & 101 & 103 & 106 & 108 & 109 & 112 & 114 & 116 & 118 & 120 & 123 & 124 & 126 & 128 & 130 \\
 19 &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 88 & 92 & 95 & 96 & 98 & 100 & 103 & 106 & 108 & 111 & 114 & 115 & 117 & 119 & 121 & 124 & 126 & 129 & 130 & 132 & 134 & 136 \\
 20 &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 96 & 100 & 101 & 103 & 105 & 108 & 111 & 113 & 116 & 120 & 121 & 123 & 125 & 127 & 129 & 131 & 135 & 136 & 138 & 140 & 142 \\
@@ -488,9 +657,30 @@ $m \backslash n$ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 &
 \end{tabular}
 }
 \vspace{1em}
-\captionof{table}{$z_2(m,n)$}
+\captionof{table}{$Z_{2,2}(m,n)$ alsó becslések}
 \end{center}
 
+\subsection*{Eredmények:}
+Jelenleg ismert alsó becsléseket \textit{Alex F. Collins and Alexander W. N. Riasanovsky and John C. Wallace and Stanisław P. Radziszowski, Zarankiewicz Numbers and Bipartite Ramsey Numbers}\cite{collins2020zarankiewicz} című cikkéből vettük. A cikk egészen $Z(31,31)$-ig  ad pontos alsó becsléseket, viszont csak a főátlóra. Ezekben az esetekben a bemutatott heurisztikákból létrehozott fenti táblázat is mindig pontos. Egyik legfrissebb felső becslések \textit{Tan, Jeremy (2022): An attack on Zarankiewicz's problem through SAT solving} \cite{tan2022zarankiewicz} című cikkében találhatók, ahol $Z(m,n)$ értékei $2 \leq m \leq 24$ és $2 \leq n \leq 35$ tartományban szerepelnek. A táblázat $m \leq 20$ és $n \leq 26$ esetén minden értéket pontosan tartalmaz, illetve az aszimmetrikusabb párok esetén e tartományon túl is.
+
+Az általunk alkalmazott módszerekkel előállított táblázat mindössze öt olyan esetet tartalmaz, ahol az ismert pontos értékektől elmarad. Ezek az esetek: \textbf{TODO}.
+
+Ugyanakkor összesen 16 olyan esetben sikerült új felső becslést elérni, amelyekről \cite{tan2022zarankiewicz} alapján korábban nem volt ismert, hogy valóban elérhetők-e. Ezek az esetek:
+\begin{table}[H]
+\[
+\begin{array}{c||cccccccccccccccc}
+m & 16 & 16 & 16 & 17 & 17 & 17 & 17 & 17 & 17 & 20 & 21 & 22 & 22 & 23 & 23 & 24 \\
+n & 33 & 34 & 35 & 30 & 31 & 32 & 33 & 34 & 35 & 29 & 29 & 29 & 30 & 29 & 30 & 30 \\
+\hline
+Z_2,_2(m,n) & 
+106 & 108 & 110 & 105 & 107 & 109 & 111 & 113 & 115 & 
+120 & 125 & 130 & 132 & 135 & 138 & 144 \\
+\end{array}
+\]
+\caption{Esetek, amikor beállítja a \cite{tan2022zarankiewicz} beli nem exakt felső becsléseket}
+\end{table}
+
+\printbibliography
 
 \vspace{1cm}\vfill
 Budapest, \today
