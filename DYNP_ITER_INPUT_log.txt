@@ -1,0 +1,8 @@
+Z(22, 30; 2, 2): Max: 125; Mean: 119.81; Variance: 2.9669; Size: 2000; Time: 18640.2 ms; Top5_Histogram_(relative_to_max): 381 203 82 26 5 ;
+ iter: 200;
+Z(22, 30; 2, 2): Max: 126; Mean: 119.851; Variance: 3.04115; Size: 2000; Time: 19007.6 ms; Top5_Histogram_(relative_to_max): 204 90 24 5 1 ;
+ iter: 200;
+Z(22, 30; 2, 2): Max: 126; Mean: 119.784; Variance: 2.95206; Size: 2000; Time: 18687.7 ms; Top5_Histogram_(relative_to_max): 203 67 15 10 1 ;
+ iter: 200;
+Z(22, 30; 2, 2): Max: 127; Mean: 119.824; Variance: 3.06816; Size: 20000; Time: 185337 ms; Top5_Histogram_(relative_to_max): 921 245 39 5 2 ;
+ iter: 200;
