@@ -49,8 +49,26 @@ bool is_number(const std::string& s)
     return !s.empty() && it == s.end();
 }
 
+void print_in_readme_format(const vector<vector<int>>& res, int size){
+    string start=R"(| m \ n | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|)";
+    ofstream outfile ("results_readme.txt");
+    outfile<<start<<endl;
+    for(int i=0;i<size;i++){
+        outfile<<"| **"<<i+2<<"**";
+        for(int j=0;j<size;j++){
+            int val=res[j][i];
+            if(val)
+                outfile<<" | ["<<val<<"](results/output/"<<'Z'<<i+2<<'_'<<j+2<<"_2_2_"<<val<<".txt)";
+            else
+                outfile<<" |  ";
+        }
+        outfile<<" |"<<endl;
+    }
+    outfile.close();
+}
+
 void print_in_latexformat(const vector<vector<int>>& res, int size){
-    stringstream str;
     ofstream outfile ("results_latex.txt");
     string start=R"(\begin{center}
 \renewcommand{\arraystretch}{1.2}
@@ -119,6 +137,7 @@ int main(int argc, char* argv[]){
     }
     outfile.close();
     print_in_latexformat(res,size);
+    print_in_readme_format(res, size);
 
     
 }
