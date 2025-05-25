@@ -73,6 +73,7 @@ int main(int argc, char* argv[]){
                 cerr << "Error opening files.\n";
                 return 1;
             }
+            dst << src.rdbuf();
         }
     }
 }
